@@ -1,0 +1,8 @@
+[MESSAGES CONTROL]
+disable=
+    missing-class-docstring,
+    no-else-raise,
+    missing-function-docstring,
+    no-else-raise,
+    missing-module-docstring,
+    unused-import
