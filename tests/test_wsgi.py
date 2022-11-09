@@ -1,6 +1,4 @@
-import pytest
-
-from wsgi import BobTail
+from bobtail.wsgi import BobTail
 from .mock_environ import mock_environ
 
 def test_bobtail():
