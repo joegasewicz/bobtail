@@ -15,26 +15,35 @@ pip install bobtail
 
 ### Getting Started
 ```python
+from bobtail import BobTail, Request
 
-class Images:
+    class Images:
 
-    def get(self):
-        return f"It Works!"
+        def get(self, req: Request):
+            return {
+                       "users": [{"id: 1"}, {"id: 2"}]
+                   }, 200
 
-    def post(self):
-        pass
+        def post(self, req: Request):
+            return None, 202
 
-    def delete(self):
-        pass
+        def delete(self, req: Request):
+            return None, 201
 
-    def put(self):
-        pass
+        def put(self, req: Request):
+            return {
+                       "id": 1,
+                   }, 202
 
+        def patch(self, req: Request):
+            return {
+                       "id": 1,
+                   }, 202
 
-routes = [
-    (Images, "/images")
-]
+    routes = [
+        (Images(), "/images")
+    ]
 
-app = BobTail(routes=routes)
+    app = BobTail(routes=routes)
 
 ```
