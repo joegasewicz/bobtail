@@ -15,30 +15,31 @@ pip install bobtail
 
 ### Getting Started
 ```python
-from bobtail import BobTail, Request
+from typing import Tuple, Optional, Dict
 
-    class Images:
+from bobtail import AbstractRoute, Request, Response
 
-        def get(self, req: Request):
-            return {
-                       "users": [{"id: 1"}, {"id: 2"}]
-                   }, 200
 
-        def post(self, req: Request):
-            return None, 202
+class Images(AbstractRoute):
+    def get(self, req: Request, res: Response) -> Tuple[Optional[Dict], int]:
+        # Use the response object to set the response headers if required (these are the default headers)
+        res.headers = [("Content-type", "application/json")]
+        return {
+            "image": {
+                "id": 1,
+                "url": "http://localhost:7004",
+                "file_name": "sunny.png"
+            }
+        }, 200
 
-        def delete(self, req: Request):
-            return None, 201
+    def post(self, req: Request, res: Response) -> Tuple[Optional[Dict], int]:
+        pass
 
-        def put(self, req: Request):
-            return {
-                       "id": 1,
-                   }, 202
+    def put(self, req: Request, res: Response) -> Tuple[Optional[Dict], int]:
+        pass
 
-        def patch(self, req: Request):
-            return {
-                       "id": 1,
-                   }, 202
+    def delete(self, req: Request, res: Response) -> Tuple[Optional[Dict], int]:
+        pass
 
     routes = [
         (Images(), "/images")
