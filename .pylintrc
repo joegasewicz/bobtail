@@ -6,3 +6,5 @@ disable=
     no-else-raise,
     missing-module-docstring,
     unused-import
+    unused-argument
+    too-few-public-methods
