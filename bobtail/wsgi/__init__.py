@@ -1,4 +1,28 @@
 from typing import List, Tuple
+from abc import ABC, abstractmethod
+
+
+class AbstractRoute(ABC):
+
+    @abstractmethod
+    def get(self):
+        pass
+
+    @abstractmethod
+    def post(self):
+        pass
+
+    @abstractmethod
+    def put(self):
+        pass
+
+    @abstractmethod
+    def delete(self):
+        pass
+
+    @abstractmethod
+    def patch(self):
+        pass
 
 
 class NoRoutesError(Exception):
@@ -7,7 +31,7 @@ class NoRoutesError(Exception):
 
 class BobTail:
 
-    routes: List[Tuple[object, str]]
+    routes: List[Tuple[AbstractRoute, str]]
 
     def __init__(self, *args, **kwargs):
         if "routes" not in kwargs:
@@ -19,19 +43,21 @@ class BobTail:
         current_path = environ["PATH_INFO"]
         current_method = environ["REQUEST_METHOD"]
 
-        for route in self.routes:
-            if route[1] == current_path:
+        for r in self.routes:
+            route, curr_path = r
+            if curr_path == current_path:
                 match current_method:
                     case "GET":
-                        pass
+                        route.get()
                     case "POST":
-                        pass
+                        route.post()
                     case "DELETE":
-                        pass
+                        route.delete()
                     case "PUT":
-                        pass
+                        route.put()
+                    case "PATCH":
+                        route.patch()
 
-        # print(f"here---> {environ}")
         status = "200 OK"
         response_headers = [("Content-type", "text/plain")]
         start_response(status, response_headers)
