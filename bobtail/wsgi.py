@@ -63,51 +63,31 @@ class BobTail:
             method=self.environ["REQUEST_METHOD"],
         )
 
-    def _handle_route(self, request: Request):
-        for r in self.routes:
-            route, curr_path = r
+    def _call_handler(self, route: callable, request: Request, method: str):
+        if hasattr(route,  method):
+            try:
+                return getattr(route, method)(request)
+            except TypeError as exc:
+                raise RouteClassError("route class is not instantiated") from exc
+        else:
+            return self._handle_404()
+
+    def _handle_route(self, request: Request) -> Tuple[Optional[Dict], int]:
+        for current_route in self.routes:
+            route, curr_path = current_route
             if curr_path == request.path:
                 match request.method:
                     case "GET":
-                        if hasattr(route, "get"):
-                            try:
-                                return route.get(request)
-                            except TypeError:
-                                raise RouteClassError("route class is not instantiated")
-                        else:
-                            return self._handle_404()
+                        return self._call_handler(route, request, "get")
                     case "POST":
-                        if hasattr(route, "post"):
-                            try:
-                                return route.post(request)
-                            except TypeError:
-                                raise RouteClassError("route class is not instantiated")
-                        else:
-                            return self._handle_404()
+                        return self._call_handler(route, request, "post")
                     case "DELETE":
-                        if hasattr(route, "delete"):
-                            try:
-                                return route.delete(request)
-                            except TypeError:
-                                raise RouteClassError("route class is not instantiated")
-                        else:
-                            return self._handle_404()
+                        return self._call_handler(route, request, "delete")
                     case "PUT":
-                        if hasattr(route, "put"):
-                            try:
-                                return route.put(request)
-                            except TypeError:
-                                raise RouteClassError("route class is not instantiated")
-                        else:
-                            return self._handle_404()
+                        return self._call_handler(route, request, "put")
                     case "PATCH":
-                        if hasattr(route, "patch"):
-                            try:
-                                return route.patch(request)
-                            except TypeError:
-                                raise RouteClassError("route class is not instantiated")
-                        else:
-                            return self._handle_404()
+                        return self._call_handler(route, request, "patch")
+        return None, 0
 
     def __call__(self, environ, start_response):
         self.environ = environ
@@ -117,7 +97,7 @@ class BobTail:
         status = f"{self.response.status} OK"
         response_headers = [("Content-type", "text/plain")]
         start_response(status, response_headers)
-        byte_data: bytes
+
         if data is not None:
             return [bytes(str(data), "utf-8")]
         return None
