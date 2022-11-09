@@ -32,7 +32,7 @@ jobs:
     - name: Lint with Pylint
       run: |
         # stop the build if there are Python syntax errors or undefined names
-        pipenv run pylint password_mixin
+        pipenv run pylint bobtail
     - name: Test with pytest
       run: |
         pipenv run pytest -vvv
