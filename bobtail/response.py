@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, Tuple, List
 
 
 class Response:
@@ -6,6 +6,9 @@ class Response:
 
     data: Dict
 
-    def __init__(self, data: Dict, status: int):
+    headers: List[Tuple[str, str]]
+
+    def __init__(self, data: Dict, status: int, headers: List[Tuple[str, str]]):
         self.data = data
         self.status = status
+        self.headers = headers
