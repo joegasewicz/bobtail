@@ -28,7 +28,7 @@ def test_bobtail():
     def start_response(status, response_headers):
         pass
 
-    result = app(start_response=start_response, environ=mock_environ)
-    assert result == [b"Hello World!\n"]
+    res = app(mock_environ, start_response)
+    assert res == [b"Hello World!\n"]
 
 
