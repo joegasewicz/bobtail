@@ -54,10 +54,6 @@ class BobTail:
     def init_response(self):
         self.response = Response()
 
-    def update_response(self, data, status):
-        self.response.data = data
-        self.response.status = status
-
     def set_request(self):
         self.request = Request(
             path=self.environ["PATH_INFO"],
@@ -100,9 +96,7 @@ class BobTail:
         self.set_request()
         self.init_response()
         # Call route handler with default response
-        data, route_status = self._handle_route()
-        # Update the response from the caller's route handler's returned values
-        self.update_response(data, route_status)
+        self._handle_route()
 
         status = f"{self.response.status} OK"
 
@@ -110,10 +104,6 @@ class BobTail:
 
         # Start response
         start_response(status, response_headers)
-
-        if data is not None:
-            resp_data = bytes(json.dumps(data, indent=2), "utf-8")
-            self.response.content_len(resp_data)
-            return [resp_data]
-        self.response.content_len(None)
-        return []
+        # Process the final byte list & headers
+        data = self.response._process()
+        return data
