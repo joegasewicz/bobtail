@@ -7,4 +7,5 @@ disable=
     missing-module-docstring,
     unused-import,
     unused-argument,
-    too-few-public-methods
+    too-few-public-methods,
+    pointless-string-statement
