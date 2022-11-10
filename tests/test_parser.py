@@ -1,3 +1,5 @@
+import pytest
+
 from bobtail.parser import Parser
 from bobtail.route import AbstractRoute
 
@@ -110,3 +112,59 @@ class TestParser:
             'vars': None,
         }
         assert result == expected
+
+    def test_extra_segments(self):
+        class Images6:
+            def get(self, req, res):
+                pass
+
+        class Videos6:
+            def get(self, req, res):
+                pass
+
+        class Files6:
+            def get(self, req, res):
+                pass
+
+        routes2 = [
+            (Images6(), "/images/image/{id:int}/pic/{file_name:str}"),
+            (Videos6(), "/videos/movie/{name:str}"),
+            (Files6(), "/files/new/{true:bool}"),
+        ]
+        path2 = "/images/image/1/pic/sunny.png/hello!"
+        p2 = Parser(routes2, path2)
+        _ = p2.route()
+        assert p2.meta_data["matched"] is None
+
+    def test_get_matched(self):
+        class Home4:
+            def get(self, req, res):
+                pass
+
+        class Images4:
+            def get(self, req, res):
+                pass
+
+        class Files4:
+            def get(self, req, res):
+                pass
+
+        routes4 = [
+            (Images4(), "/images"),
+            (Home4(), "/"),
+            (Files4(), "/"),
+        ]
+        path = "/"
+        p4 = Parser(routes4, path)
+        result = p4.route()
+        expected = {
+            'class': 'Home4',
+            'path': '/',
+            'route': '/',
+            'split': [''],
+            'vars': None,
+        }
+        assert result == expected
+        m = p4.get_matched()
+        assert m == "Home4"
+

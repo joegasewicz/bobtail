@@ -5,6 +5,7 @@ from bobtail.request import Request
 from bobtail.status import Status
 from bobtail.exceptions import NoRoutesError, RouteClassError
 from bobtail.route import TypeRoute
+from bobtail.parser import Parser
 
 
 class BobTail:
@@ -18,6 +19,8 @@ class BobTail:
     request: Request
 
     _status: Status
+
+    parse_metadata: Dict = None
 
     def _handle_404(self):
         self.response.set_status(404)
@@ -50,9 +53,13 @@ class BobTail:
             self._handle_404()
 
     def _handle_route(self):
+        p = Parser(self.routes, self.request.path)
+        self.parse_metadata = p.route()
+        # Set the args on the request object
+        self.request.set_args(self.parse_metadata["vars"])
         for current_route in self.routes:
             route, curr_path = current_route
-            if curr_path == self.request.path:
+            if route.__class__.__name__ == p.get_matched():
                 match self.request.method:
                     case "GET":
                         self._call_handler(route, "get")

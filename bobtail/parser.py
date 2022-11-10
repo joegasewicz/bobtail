@@ -20,7 +20,7 @@ class Parser:
         Remove all variable segments from both stings & match
         """
         # Create a fresh metadata dict
-        self.meta_data = {"path": {}, "routes": {}}
+        self.meta_data = {"path": {}, "routes": {}, "matched": None}
         # Cache path
         path_segments = self.path.split("/")
         self.meta_data["path"] = {
@@ -38,15 +38,20 @@ class Parser:
             }
 
         for k, v in self.meta_data["routes"].items():
-            split_vals = self.meta_data["routes"][k]["split"]
+            split_route_vals = self.meta_data["routes"][k]["split"]
+            split_path_vals = self.meta_data["path"]["split"]
+            # check if the incoming request path is longer than the stored route path
+            if len(split_route_vals) != len(split_path_vals):
+                break
             # route_segment - the assigned route handlers path
             _route_vars = {}
-            for i, route_segment in enumerate(split_vals):
+            for i, route_segment in enumerate(split_route_vals):
                 route_var: str
                 # path_segment - the incoming requests path
                 path_segment = self.meta_data["path"]["split"][i]
                 # Check if path is "/"
                 if len(route_segment) == 0 and self.path == "/":
+                    self.meta_data["matched"] = k
                     self._set_metadata(k, path_segment, None, None)
                     return self.meta_data["routes"][k]
                 # Test route matches path
@@ -57,7 +62,8 @@ class Parser:
                     # If we reach this point then store the vars
                     n, t = route_segment[1:-1].split(":")
                     self._set_metadata(k, path_segment, t, n)
-                if (len(split_vals) - 1) == i:
+                if (len(split_path_vals) - 1) == i:
+                    self.meta_data["matched"] = k
                     return self.meta_data["routes"][k]
 
     def _set_metadata(self, class_name: str, path_segment: str, var_type: Optional[str], var_name: Optional[str]):
@@ -106,3 +112,10 @@ class Parser:
         """
         route = self._match()
         return route
+
+    def get_matched(self) -> Optional[str]:
+        """
+        :return:
+        :rtype:
+        """
+        return self.meta_data["matched"]
