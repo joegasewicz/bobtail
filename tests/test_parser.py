@@ -5,27 +5,26 @@ from bobtail.route import AbstractRoute
 class TestParser:
 
     def test_route(self):
-        class Images:
+        class Images1:
             def get(self, req, res):
                 pass
 
-        class Videos:
+        class Videos1:
             def get(self, req, res):
                 pass
 
-        class Files:
+        class Files1:
             def get(self, req, res):
                 pass
 
-        routes = [
-            (Images(), "/images/image/{id:int}"),
-            (Videos(), "/videos/movie/{name:string}"),
-            (Files(), "/files/new/{true:bool}"),
+        routes1 = [
+            (Images1(), "/images/image/{id:int}"),
+            (Videos1(), "/videos/movie/{name:string}"),
+            (Files1(), "/files/new/{true:bool}"),
         ]
-
-        p = Parser(routes)
-        path = "/images/image/1"
-        result = p.route(path)
+        path1 = "/images/image/1"
+        p1 = Parser(routes1, path1)
+        result = p1.route()
         expected = {
             'route': '/images/image/{id:int}',
             'split': ['images', 'image', '{id:int}'],
@@ -37,33 +36,32 @@ class TestParser:
                 }
             },
             'path': '/images/image/1',
-            'class': 'Files'
+            'class': 'Images1'
         }
         assert result == expected
 
     def test_route_with_multiple_vars(self):
-        class Images:
+        class Images2:
             def get(self, req, res):
                 pass
 
-        class Videos:
+        class Videos2:
             def get(self, req, res):
                 pass
 
-        class Files:
+        class Files2:
             def get(self, req, res):
                 pass
 
-        routes = [
-            (Images(), "/images/image/{id:int}/pic/{file_name:str}"),
-            (Videos(), "/videos/movie/{name:str}"),
-            (Files(), "/files/new/{true:bool}"),
+        routes2 = [
+            (Images2(), "/images/image/{id:int}/pic/{file_name:str}"),
+            (Videos2(), "/videos/movie/{name:str}"),
+            (Files2(), "/files/new/{true:bool}"),
         ]
-
-        p = Parser(routes)
-        path = "/images/image/1/pic/sunny.png"
-        result = p.route(path)
-        expected = {
+        path2 = "/images/image/1/pic/sunny.png"
+        p2 = Parser(routes2, path2)
+        result2 = p2.route()
+        expected2 = {
             'route': '/images/image/{id:int}/pic/{file_name:str}',
             'split': ['images', 'image', '{id:int}', 'pic', '{file_name:str}'],
             'vars': {
@@ -79,6 +77,36 @@ class TestParser:
                 }
             },
             'path': '/images/image/1/pic/sunny.png',
-            'class': 'Files'
+            'class': 'Images2'
+        }
+        assert result2 == expected2
+
+    def test_route_index_route(self):
+        class Home3:
+            def get(self, req, res):
+                pass
+
+        class Images3:
+            def get(self, req, res):
+                pass
+
+        class Files3:
+            def get(self, req, res):
+                pass
+
+        routes3 = [
+            (Images3(), "/images"),
+            (Home3(), "/"),
+            (Files3(), "/"),
+        ]
+        path = "/"
+        p3 = Parser(routes3, path)
+        result = p3.route()
+        expected = {
+            'class': 'Home3',
+            'path': '/',
+            'route': '/',
+            'split': [''],
+            'vars': None,
         }
         assert result == expected

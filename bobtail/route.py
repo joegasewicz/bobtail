@@ -9,18 +9,50 @@ class AbstractRoute(ABC):
 
     @abstractmethod
     def get(self, req: Request, res: Response) -> None:
+        """
+        :param req:
+        :type req:
+        :param res:
+        :type res:
+        :return:
+        :rtype:
+        """
         pass
 
     @abstractmethod
     def post(self, req: Request, res: Response) -> None:
+        """
+        :param req:
+        :type req:
+        :param res:
+        :type res:
+        :return:
+        :rtype:
+        """
         pass
 
     @abstractmethod
     def put(self, req: Request, res: Response) -> None:
+        """
+        :param req:
+        :type req:
+        :param res:
+        :type res:
+        :return:
+        :rtype:
+        """
         pass
 
     @abstractmethod
     def delete(self, req: Request, res: Response) -> None:
+        """
+        :param req:
+        :type req:
+        :param res:
+        :type res:
+        :return:
+        :rtype:
+        """
         pass
 
 

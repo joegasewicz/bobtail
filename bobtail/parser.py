@@ -1,28 +1,32 @@
-from typing import List, Dict
+from typing import List, Dict, Optional
 
 from bobtail.route import TypeRoute
 
 
 class Parser:
-
     routes: List[TypeRoute]
 
-    meta_data: Dict = {"path": {}, "routes": {}}
+    # the incoming request path
+    path: str
 
-    def __init__(self, routes: List[TypeRoute]):
+    meta_data: Dict = None
+
+    def __init__(self, routes: List[TypeRoute], path):
+        self.path = path
         self.routes = routes
 
-    def match(self, path: str) -> Dict:
+    def _match(self) -> Dict:
         """
         Remove all variable segments from both stings & match
         """
+        # Create a fresh metadata dict
+        self.meta_data = {"path": {}, "routes": {}}
         # Cache path
-        path_segments = path.split("/")
+        path_segments = self.path.split("/")
         self.meta_data["path"] = {
-            "split":   path_segments[1:],
+            "split": path_segments[1:],
         }
         # Cache route path
-        route_class: str
         for rc, route in self.routes:
             route_class = rc.__class__.__name__
             route_split = route.split("/")
@@ -41,40 +45,64 @@ class Parser:
                 route_var: str
                 # path_segment - the incoming requests path
                 path_segment = self.meta_data["path"]["split"][i]
+                # Check if path is "/"
+                if len(route_segment) == 0 and self.path == "/":
+                    self._set_metadata(k, path_segment, None, None)
+                    return self.meta_data["routes"][k]
                 # Test route matches path
                 if route_segment[0] != "{" and route_segment != path_segment:
                     # No match, break out of this route class
                     break
                 if route_segment[0] == "{":
-                    # Store the variable
-                    n, t = route_segment[1:-1].split(":")
-                    _route_vars = {
-                        f"{n}": {
-                            "name": n,
-                            "type": t,
-                            "value": path_segment,
-                        }
-                    }
-                    if self.meta_data["routes"][k]["vars"]:
-                        _route_vars |= self.meta_data["routes"][k]["vars"]
                     # If we reach this point then store the vars
-                    self.meta_data["routes"][k]["vars"] = _route_vars
-                    if "path" not in self.meta_data["routes"][k]:
-                        self.meta_data["routes"][k]["path"] = path
-                        self.meta_data["routes"][k]["class"] = route_class
+                    n, t = route_segment[1:-1].split(":")
+                    self._set_metadata(k, path_segment, t, n)
                 if (len(split_vals) - 1) == i:
                     return self.meta_data["routes"][k]
 
-    def get_vars(self):
-        pass
+    def _set_metadata(self, class_name: str, path_segment: str, var_type: Optional[str], var_name: Optional[str]):
+        """
+        # Returns:
+        #  {
+        #     'route': '/images/image/{id:int}/pic/{file_name:str}',
+        #     'split': ['images', 'image', '{id:int}', 'pic', '{file_name:str}'],
+        #     'vars': {
+        #         'id': {
+        #             'name': 'id',
+        #             'type': 'int',
+        #             'value': '1',
+        #         },
+        #         'file_name': {
+        #             'name': 'file_name',
+        #             'type': 'str',
+        #             'value': 'sunny.png',
+        #         }
+        #     },
+        #     'path': '/images/image/1/pic/sunny.png',
+        #     'class': 'Images'
+        # }
+        """
+        if var_type is not None and var_name is not None:
+            _route_vars = {
+                f"{var_name}": {
+                    "name": var_name,
+                    "type": var_type,
+                    "value": path_segment,
+                }
+            }
+            if self.meta_data["routes"][class_name]["vars"]:
+                _route_vars |= self.meta_data["routes"][class_name]["vars"]
+            self.meta_data["routes"][class_name]["vars"] = _route_vars
+        if "path" not in self.meta_data["routes"][class_name]:
+            self.meta_data["routes"][class_name]["path"] = self.path
+            self.meta_data["routes"][class_name]["class"] = class_name
 
-    def format(self):
-        return {
-
-        }
-
-    def route(self, path: str) -> Dict:
-        if path == "/":
-            return self.format()
-        route = self.match(path)
+    def route(self) -> Dict:
+        """
+        Matches the incoming path to a stored route handler path
+        Important: Will match ONLY the first route handler class that matches the incoming request path.
+        :return:
+        :rtype:
+        """
+        route = self._match()
         return route

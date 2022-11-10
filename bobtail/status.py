@@ -47,6 +47,12 @@ class Status:
     }
 
     def get(self, status: int):
+        """
+        :param status:
+        :type status:
+        :return:
+        :rtype:
+        """
         try:
             return f"{status} {self.codes[str(status)]}"
         except KeyError as exc:

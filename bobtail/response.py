@@ -14,32 +14,48 @@ class Response:
 
     _content_length: int = None
 
-    """
-    :param value: Excepts a dict
-    """
     def set_headers(self, value: Dict) -> None:
+        """
+
+        :param value: Excepts a dict
+        :type value:
+        :return:
+        :rtype:
+        """
         self.headers = {
             **self.headers,
             **value,
         }
 
-    """
-    :param value: Sets the response status
-    """
     def set_status(self, value: int) -> None:
+        """
+
+        :param value: Sets the response status
+        :type value:
+        :return:
+        :rtype:
+        """
         self.status = value
 
-    """
-    :param value: Set the body of the request
-    """
     def set_body(self, value: Dict) -> None:
+        """
+        Set the body of the request
+        :param value:
+        :type value:
+        :return:
+        :rtype:
+        """
         self.body = value
 
-    """
-    Warning: calling this method directly inside a route handler will have no effect
-    as the content length is set dynamically after the execution of the route handler
-    """
     def content_len(self, data: Optional[bytes]) -> None:
+        """
+        Warning: calling this method directly inside a route handler will have no effect
+        as the content length is set dynamically after the execution of the route handler
+        :param data:
+        :type data:
+        :return:
+        :rtype:
+        """
         if self._content_length is None:
             con_len = 0 if data is None else len(data)
             self.headers = {
