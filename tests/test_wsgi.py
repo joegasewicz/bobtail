@@ -3,7 +3,7 @@ from bobtail.request import Request
 from .mock_environ import mock_environ
 
 
-def test_bobtail():
+def test_handlers():
     class Images:
 
         def get(self, req, res):
@@ -62,3 +62,21 @@ def test_bobtail():
     data = app(environ, lambda s, r: None)
     assert data == [b'{\n  "id": 1\n}']
     assert app.response.status == 202
+
+
+def test_headers():
+    class Images:
+
+        def get(self, req, res):
+            res.headers = {"Content-type", "text/plain"}
+            return "Text response!"
+
+    routes = [
+        (Images(), "/images")
+    ]
+
+    app = BobTail(routes=routes)
+
+    environ = {"PATH_INFO": "/images", "REQUEST_METHOD": "GET"}
+    _ = app(environ, lambda s, r: None)
+    assert app.response.headers == {"Content-type", "text/plain"}

@@ -35,8 +35,6 @@ class RouteClassError(Exception):
 
 class BobTail:
 
-    default_headers = [("Content-type", "application/json")]
-
     environ: Dict
 
     routes: List[Tuple[AbstractRoute, str]]
@@ -107,7 +105,13 @@ class BobTail:
         self.update_response(data, route_status)
 
         status = f"{self.response.status} OK"
+
+
         response_headers = [("Content-type", "application/json")]
+
+
+
+        # Start response
         start_response(status, response_headers)
 
         if data is not None:
