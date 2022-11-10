@@ -58,7 +58,7 @@ class BobTail:
         # Set the args on the request object
         self.request.set_args(self.parse_metadata["vars"])
         for current_route in self.routes:
-            route, curr_path = current_route
+            route, _ = current_route
             if route.__class__.__name__ == p.get_matched():
                 match self.request.method:
                     case "GET":

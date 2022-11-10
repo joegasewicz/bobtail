@@ -37,7 +37,7 @@ class Parser:
                 "vars": None,
             }
 
-        for k, v in self.meta_data["routes"].items():
+        for k, _ in self.meta_data["routes"].items():
             split_route_vals = self.meta_data["routes"][k]["split"]
             split_path_vals = self.meta_data["path"]["split"]
             # check if the incoming request path is longer than the stored route path
@@ -46,7 +46,6 @@ class Parser:
             # route_segment - the assigned route handlers path
             _route_vars = {}
             for i, route_segment in enumerate(split_route_vals):
-                route_var: str
                 # path_segment - the incoming requests path
                 path_segment = self.meta_data["path"]["split"][i]
                 # Check if path is "/"
@@ -66,7 +65,13 @@ class Parser:
                     self.meta_data["matched"] = k
                     return self.meta_data["routes"][k]
 
-    def _set_metadata(self, class_name: str, path_segment: str, var_type: Optional[str], var_name: Optional[str]):
+    def _set_metadata(
+            self,
+            class_name: str,
+            path_segment: str,
+            var_type: Optional[str],
+            var_name: Optional[str],
+    ):
         """
         # Returns:
         #  {
@@ -106,7 +111,8 @@ class Parser:
     def route(self) -> Dict:
         """
         Matches the incoming path to a stored route handler path
-        Important: Will match ONLY the first route handler class that matches the incoming request path.
+        Important: Will match ONLY the first route handler class that matches the
+        incoming request path.
         :return:
         :rtype:
         """

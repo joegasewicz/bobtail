@@ -17,7 +17,6 @@ class AbstractRoute(ABC):
         :return:
         :rtype:
         """
-        pass
 
     @abstractmethod
     def post(self, req: Request, res: Response) -> None:
@@ -29,7 +28,6 @@ class AbstractRoute(ABC):
         :return:
         :rtype:
         """
-        pass
 
     @abstractmethod
     def put(self, req: Request, res: Response) -> None:
@@ -41,7 +39,6 @@ class AbstractRoute(ABC):
         :return:
         :rtype:
         """
-        pass
 
     @abstractmethod
     def delete(self, req: Request, res: Response) -> None:
@@ -53,7 +50,6 @@ class AbstractRoute(ABC):
         :return:
         :rtype:
         """
-        pass
 
 
 TypeRoute = Tuple[AbstractRoute, str]

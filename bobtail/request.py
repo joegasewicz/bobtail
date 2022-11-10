@@ -29,11 +29,7 @@ class Request:
             case "str":
                 return arg_value
             case "bool":
-                if arg_value == "true" or arg_value == "True":
-                    return True
-                else:
-                    return False
-
+                return bool(arg_value == "true" or arg_value == "True")
 
     def set_args(self, args):
         self.args = args

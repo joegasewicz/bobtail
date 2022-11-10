@@ -8,4 +8,3 @@ class NoRoutesError(Exception):
 
 class RouteClassError(Exception):
     pass
-
