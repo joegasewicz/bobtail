@@ -17,18 +17,18 @@ pip install bobtail
 An example of the smallest Bobtail app
 ```python
 from typing import Tuple, Optional, Dict
-from bobtail import AbstractRoute, Request, Response
-def test_headers():
-    class Images:
+from bobtail import BobTail, AbstractRoute, Request, Response
 
-        def get(self, req, res):
-            res.set_status(200)
-            res.set_body({id: 1})
+class Images:
 
-    routes = [
-        (Images(), "/images")
-    ]
+    def get(self, req, res):
+        res.set_status(200)
+        res.set_body({id: 1})
 
-    app = BobTail(routes=routes)
+routes = [
+    (Images(), "/images")
+]
+
+app = BobTail(routes=routes)
 
 ```
