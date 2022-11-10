@@ -35,8 +35,6 @@ class RouteClassError(Exception):
 
 class BobTail:
 
-    default_headers = [("Content-type", "application/json")]
-
     environ: Dict
 
     routes: List[Tuple[AbstractRoute, str]]
@@ -53,12 +51,8 @@ class BobTail:
             raise NoRoutesError("Expected a list of routes")
         self.routes = kwargs["routes"]
 
-    def set_response(self, data, route_status):
-        self.response = Response(data, route_status, self.default_headers)
-
-    def update_response(self, data, status):
-        self.response.data = data
-        self.response.status = status
+    def init_response(self):
+        self.response = Response()
 
     def set_request(self):
         self.request = Request(
@@ -100,16 +94,16 @@ class BobTail:
         self.environ = environ
         # Set request & response
         self.set_request()
-        self.set_response(None, 200)
+        self.init_response()
         # Call route handler with default response
-        data, route_status = self._handle_route()
-        # Update the response from the caller's route handler's returned values
-        self.update_response(data, route_status)
+        self._handle_route()
 
         status = f"{self.response.status} OK"
-        response_headers = [("Content-type", "application/json")]
-        start_response(status, response_headers)
 
-        if data is not None:
-            return [bytes(json.dumps(data, indent=2), "utf-8")]
-        return []
+        response_headers = [("Content-type", "application/json")]
+
+        # Start response
+        start_response(status, response_headers)
+        # Process the final byte list & headers
+        data = self.response._process()
+        return data

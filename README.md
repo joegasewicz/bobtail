@@ -4,7 +4,7 @@
 
 [//]: # (![PyPI - Python Version]&#40;https://img.shields.io/pypi/pyversions/bobtail&#41;)
 
-# Bobtail
+![Bobtail](bobtail.png?raw=true "Bobtail")
 A little Python http framework
 
 
@@ -14,32 +14,16 @@ pip install bobtail
 ```
 
 ### Getting Started
+An example of the smallest Bobtail app
 ```python
 from typing import Tuple, Optional, Dict
-
 from bobtail import AbstractRoute, Request, Response
+def test_headers():
+    class Images:
 
-
-class Images(AbstractRoute):
-    def get(self, req: Request, res: Response) -> Tuple[Optional[Dict], int]:
-        # Use the response object to set the response headers if required (these are the default headers)
-        res.headers = [("Content-type", "application/json")]
-        return {
-            "image": {
-                "id": 1,
-                "url": "http://localhost:7004",
-                "file_name": "sunny.png"
-            }
-        }, 200
-
-    def post(self, req: Request, res: Response) -> Tuple[Optional[Dict], int]:
-        pass
-
-    def put(self, req: Request, res: Response) -> Tuple[Optional[Dict], int]:
-        pass
-
-    def delete(self, req: Request, res: Response) -> Tuple[Optional[Dict], int]:
-        pass
+        def get(self, req, res):
+            res.set_status(200)
+            res.set_body({id: 1})
 
     routes = [
         (Images(), "/images")

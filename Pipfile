@@ -5,8 +5,8 @@ name = "pypi"
 
 [packages]
 
-
 [dev-packages]
 pytest = "*"
 gunicorn = "*"
 pylint = "*"
+sphinx = "*"
