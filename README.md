@@ -10,7 +10,8 @@ A little Python http framework
 
 ## Install
 ```
-pip install bobtail
+pipenv install bobtail
+pipenv install gunicorn
 ```
 
 ### Getting Started
@@ -31,4 +32,9 @@ routes = [
 
 app = BobTail(routes=routes)
 
+```
+
+### Run
+```
+pipenv run  gunicorn api:app
 ```

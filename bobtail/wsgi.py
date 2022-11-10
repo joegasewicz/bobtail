@@ -1,36 +1,17 @@
-from typing import List, Tuple, Dict, Optional
-from abc import ABC, abstractmethod
-import json
+from typing import List, Tuple, Dict
 
 from bobtail.response import Response
 from bobtail.request import Request
 from bobtail.status import Status
-
-
-class AbstractRoute(ABC):
-
-    @abstractmethod
-    def get(self, req: Request, res: Response):
-        pass
-
-    @abstractmethod
-    def post(self, req: Request, res: Response):
-        pass
-
-    @abstractmethod
-    def put(self, req: Request, res: Response):
-        pass
-
-    @abstractmethod
-    def delete(self, req: Request, res: Response):
-        pass
+from bobtail.exceptions import NoRoutesError, RouteClassError
+from bobtail.route import TypeRoute
 
 
 class BobTail:
 
     environ: Dict
 
-    routes: List[Tuple[AbstractRoute, str]]
+    routes: List[TypeRoute]
 
     response: Response
 
