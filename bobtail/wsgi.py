@@ -51,8 +51,8 @@ class BobTail:
             raise NoRoutesError("Expected a list of routes")
         self.routes = kwargs["routes"]
 
-    def set_response(self, data, route_status):
-        self.response = Response(data, route_status, self.default_headers)
+    def init_response(self):
+        self.response = Response()
 
     def update_response(self, data, status):
         self.response.data = data
@@ -98,7 +98,7 @@ class BobTail:
         self.environ = environ
         # Set request & response
         self.set_request()
-        self.set_response(None, 200)
+        self.init_response()
         # Call route handler with default response
         data, route_status = self._handle_route()
         # Update the response from the caller's route handler's returned values
@@ -106,14 +106,14 @@ class BobTail:
 
         status = f"{self.response.status} OK"
 
-
         response_headers = [("Content-type", "application/json")]
-
-
 
         # Start response
         start_response(status, response_headers)
 
         if data is not None:
-            return [bytes(json.dumps(data, indent=2), "utf-8")]
+            resp_data = bytes(json.dumps(data, indent=2), "utf-8")
+            self.response.content_len(resp_data)
+            return [resp_data]
+        self.response.content_len(None)
         return []

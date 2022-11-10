@@ -1,39 +1,49 @@
-from typing import Dict, Tuple, List
+from typing import Dict, Tuple, List, Optional
 
 
 class Response:
 
     _status: int = 200
 
-    _data: Dict = None
+    _body: Dict
+
+    _data: str
 
     _headers: Dict = {
         "Content-Type": "application/json",
     }
 
-    def __init__(self, data: Dict, status: int, headers: Dict):
-        self._data = data
-        self._status = status
-        self._headers = headers
+    _content_length: int = None
 
-    @property
-    def headers(self) -> Dict:
-        return self._headers
-
-    @headers.setter
-    def headers(self, value: Dict):
+    """
+    :param value: Excepts a dict
+    """
+    def headers(self, value: Dict) -> None:
         self._headers = {
             **self._headers,
             **value,
         }
 
-    @property
-    def status(self) -> int:
-        return self._status
-
-    @status.setter
-    def status(self, value: int):
+    """
+    :param value: Sets the response status
+    """
+    def status(self, value: int) -> None:
         self._status = value
 
-    def set_content_len(self) -> None:
-        pass
+    """
+    :param value: Set the body of the request
+    """
+    def body(self, value: Dict) -> None:
+        self._body = value
+
+    """
+    Warning: calling this method directly inside a view handler will have no effect
+    as the content length is set dynamically after the execution of the view handler
+    """
+    def content_len(self, data: Optional[bytes]) -> None:
+        if self._content_length is None:
+            con_len = 0 if data is None else len(data)
+            self._headers = {
+                **self._headers,
+                "Content-Length": f"{con_len}",
+            }

@@ -68,8 +68,9 @@ def test_headers():
     class Images:
 
         def get(self, req, res):
-            res.headers = {"Content-type", "text/plain"}
-            return "Text response!"
+            res.headers({"Content-type", "text/plain"})
+            res.status(200)
+            res.body({})
 
     routes = [
         (Images(), "/images")
