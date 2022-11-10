@@ -14,14 +14,16 @@ pip install bobtail
 ```
 
 ### Getting Started
-A very simple Bobtail app
+An example of the smallest Bobtail app
 ```python
 from typing import Tuple, Optional, Dict
 from bobtail import AbstractRoute, Request, Response
+def test_headers():
+    class Images:
 
-class Images(AbstractRoute):
-    def get(self, req: Request, res: Response) -> Tuple[Optional[Dict], int]:
-        return {"id": 1}, 200
+        def get(self, req, res):
+            res.set_status(200)
+            res.set_body({id: 1})
 
     routes = [
         (Images(), "/images")
