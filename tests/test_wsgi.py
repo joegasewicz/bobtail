@@ -1,7 +1,7 @@
+import pytest
 from bobtail.wsgi import BobTail
 from bobtail.request import Request
 from .mock_environ import mock_environ
-
 
 def test_handlers():
     class Images:

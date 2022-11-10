@@ -8,4 +8,8 @@ disable=
     unused-import,
     unused-argument,
     too-few-public-methods,
-    pointless-string-statement
+    pointless-string-statement,
+    consider-using-in,
+    too-many-locals,
+    invalid-name,
+    inconsistent-return-statements,

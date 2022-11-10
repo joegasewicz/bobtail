@@ -1,50 +1,29 @@
-from typing import List, Tuple, Dict, Optional
-from abc import ABC, abstractmethod
-import json
+from typing import List, Tuple, Dict
 
 from bobtail.response import Response
 from bobtail.request import Request
-
-
-class AbstractRoute(ABC):
-
-    @abstractmethod
-    def get(self, req: Request, res: Response) -> Tuple[Optional[Dict], int]:
-        pass
-
-    @abstractmethod
-    def post(self, req: Request, res: Response) -> Tuple[Optional[Dict], int]:
-        pass
-
-    @abstractmethod
-    def put(self, req: Request, res: Response) -> Tuple[Optional[Dict], int]:
-        pass
-
-    @abstractmethod
-    def delete(self, req: Request, res: Response) -> Tuple[Optional[Dict], int]:
-        pass
-
-
-class NoRoutesError(Exception):
-    pass
-
-
-class RouteClassError(Exception):
-    pass
+from bobtail.status import Status
+from bobtail.exceptions import NoRoutesError, RouteClassError
+from bobtail.route import TypeRoute
+from bobtail.parser import Parser
 
 
 class BobTail:
 
     environ: Dict
 
-    routes: List[Tuple[AbstractRoute, str]]
+    routes: List[TypeRoute]
 
     response: Response
 
     request: Request
 
-    def _handle_404(self) -> Tuple[Optional[Dict], int]:
-        return None, 404
+    _status: Status
+
+    parse_metadata: Dict = None
+
+    def _handle_404(self):
+        self.response.set_status(404)
 
     def __init__(self, *args, **kwargs):
         if "routes" not in kwargs:
@@ -63,32 +42,41 @@ class BobTail:
     def _call_handler(self, route: callable, method: str):
         if hasattr(route,  method):
             try:
-                result = getattr(route, method)(self.request, self.response)
-                if result is not None and len(result) == 2:
-                    return result
-                return None, 200
-            except TypeError as exc:
+                handler = getattr(route, method)
+                if not handler:
+                    self._handle_404()
+                    return
+                handler(self.request, self.response)
+            except Exception as exc:
                 raise RouteClassError("route class is not instantiated") from exc
         else:
-            return self._handle_404()
+            self._handle_404()
 
-    def _handle_route(self) -> Tuple[Optional[Dict], int]:
+    def _handle_route(self):
+        p = Parser(self.routes, self.request.path)
+        self.parse_metadata = p.route()
+        # Set the args on the request object
+        self.request.set_args(self.parse_metadata["vars"])
         for current_route in self.routes:
-            route, curr_path = current_route
-            if curr_path == self.request.path:
+            route, _ = current_route
+            if route.__class__.__name__ == p.get_matched():
                 match self.request.method:
                     case "GET":
-                        res = self._call_handler(route, "get")
-                        return res
+                        self._call_handler(route, "get")
+                        return
                     case "POST":
-                        return self._call_handler(route, "post")
+                        self._call_handler(route, "post")
+                        return
                     case "DELETE":
-                        return self._call_handler(route, "delete")
+                        self._call_handler(route, "delete")
+                        return
                     case "PUT":
-                        return self._call_handler(route, "put")
+                        self._call_handler(route, "put")
+                        return
                     case "PATCH":
-                        return self._call_handler(route, "patch")
-        return None, 0
+                        self._call_handler(route, "patch")
+                        return
+        self._handle_404()
 
     def __call__(self, environ, start_response):
         self.environ = environ
@@ -98,7 +86,8 @@ class BobTail:
         # Call route handler with default response
         self._handle_route()
 
-        status = f"{self.response.status} OK"
+        self._status = Status()
+        status = self._status.get(self.response.status)
 
         response_headers = [("Content-type", "application/json")]
 
