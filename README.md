@@ -39,6 +39,24 @@ pipenv run  gunicorn api:app
 ```
 
 ### Middleware
+Middleware is not included as part of this library but is easy to create or
+you can use  third party libraries.
+
+#### Using third party middleware
+```python
+from bobttail_logger import BobtailLogger
+
+app = Bobtail(routes=routes)
+
+# Here we are using `bobtail-logger` logging middleware
+app.use(BobtailLogger())
+```
+
+Middleware currently available
+- [bobtail-cors](https://github.com/joegasewicz/bobtail-cors)
+- [bobtail-logger](https://github.com/joegasewicz/bobtail-logger)
+
+
 Creating custom middleware example. A Middleware object must implement `AbstractMiddleware`. 
 
 ```python

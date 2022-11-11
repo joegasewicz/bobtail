@@ -17,7 +17,7 @@ class AbstractMiddleware(ABC):
 
 class Middleware:
 
-    middlewares: List[AbstractMiddleware] = []
+    middlewares: List[AbstractMiddleware] = None
 
     handler: Handler = None
 
@@ -26,15 +26,20 @@ class Middleware:
     response: Response
 
     def add(self, instance: AbstractMiddleware):
+        if self.middlewares is None:
+            self.middlewares = []
         self.middlewares.append(instance)
 
     def call(self, req: Request, res: Response, handler: Handler):
-        self.handler = handler
-        self.request = req
-        self.response = res
-        for middleware in self.middlewares:
-            middleware.init(self.request, self.response, self.tail)
-        self.handler(self.request, self.response)
+        if self.middlewares:
+            self.handler = handler
+            self.request = req
+            self.response = res
+            for middleware in self.middlewares:
+                middleware.init(self.request, self.response, self.tail)
+            self.handler(self.request, self.response)
+            return
+        handler(req, res)
 
     def tail(self, req: Request, res: Response) -> None:
         """
@@ -47,4 +52,3 @@ class Middleware:
         """
         self.request = req
         self.response = res
-        return

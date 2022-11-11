@@ -1,92 +1,105 @@
-import pytest
+from tests.fixtures import bobtail_app
+from tests.fixtures import (
+    route_class_one,
+    route_class_two,
+    middle_cors,
+    middle_logger,
+)
 
 from bobtail.wsgi import BobTail
-from bobtail.request import Request
-from tests.mock_environ import mock_environ
-from tests.fixtures import bobtail_app
 
 
-def test_handlers(bobtail_app):
-    class Images:
+class TestBobtail:
 
-        def get(self, req, res):
-            res.set_body({"users": [{"id": 1}, {"id": 2}]})
-            res.set_status(200)
+    app: BobTail = None
 
-        def post(self, req, res):
-            res.set_status(202)
+    def teardown_method(self, bobtail_app):
+        self.app = None
 
-        def delete(self, req, res):
-            res.set_body(None)
-            res.set_status(201)
+    def test_use(self, bobtail_app, middle_cors, middle_logger):
 
-        def put(self, req, res):
-            res.set_body({"id": 1})
-            res.set_status(202)
+        class Images:
 
-        def patch(self, req, res):
-            res.set_body({"id": 1})
-            res.set_status(202)
+            def get(self, req, res):
+                res.set_headers({"Content-type": "text/plain"})
+                res.set_status(200)
+                res.set_body({})
 
-    routes = [
-        (Images(), "/images")
-    ]
+        routes = [
+            (Images(), "/images")
+        ]
 
-    app = bobtail_app(routes=routes)
+        self.app = bobtail_app(routes=routes)
 
-    # GET
-    environ = {"PATH_INFO": "/images", "REQUEST_METHOD": "GET"}
-    data = app(environ, lambda s, r: None)
-    assert app.response.body == {"users": [{"id": 1}, {"id": 2}]}
-    assert app.response.status == 200
-    assert data == [b'{\n  "users": [\n    {\n      "id": 1\n    },\n    {\n      "id": 2\n    }\n' b'  ]\n}']
+        # Check no middleware is added
+        assert self.app.middleware.middlewares is None
 
-    # POST
-    environ = {"PATH_INFO": "/images", "REQUEST_METHOD": "POST"}
-    data = app(environ, lambda s, r: None)
-    assert data == []
-    assert app.response.body is None
-    assert app.response.status == 202
+        self.app.use(middle_cors)
+        self.app.use(middle_logger)
 
-    # # DELETE
-    environ = {"PATH_INFO": "/images", "REQUEST_METHOD": "DELETE"}
-    data = app(environ, lambda s, r: None)
-    assert data == []
-    assert app.response.body is None
-    assert app.response.status == 201
+        assert len(self.app.middleware.middlewares) == 2
 
-    # PUT
-    environ = {"PATH_INFO": "/images", "REQUEST_METHOD": "PUT"}
-    data = app(environ, lambda s, r: None)
-    assert data == [b'{\n  "id": 1\n}']
-    assert app.response.body == {"id": 1}
-    assert app.response.status == 202
+        environ = {"PATH_INFO": "/images", "REQUEST_METHOD": "GET"}
+        _ = self.app(environ, lambda s, r: None)
+        assert self.app.response.headers["Access-Control-Allow-Origin"] == "*"
 
-    # PATCH
-    environ = {"PATH_INFO": "/images", "REQUEST_METHOD": "PATCH"}
-    data = app(environ, lambda s, r: None)
-    assert data == [b'{\n  "id": 1\n}']
-    assert app.response.body == {"id": 1}
-    assert app.response.status == 202
+    def test_handlers(self, bobtail_app, route_class_one):
 
-    # Check no middleware is added
-    assert len(app.middleware.middlewares) == 0
+        routes = [
+            (route_class_one, "/images")
+        ]
+        self.app = bobtail_app(routes=routes)
 
+        # GET
+        environ = {"PATH_INFO": "/images", "REQUEST_METHOD": "GET"}
+        data = self.app(environ, lambda s, r: None)
+        assert self.app.response.body == {"users": [{"id": 1}, {"id": 2}]}
+        assert self.app.response.status == 200
+        assert data == [b'{\n  "users": [\n    {\n      "id": 1\n    },\n    {\n      "id": 2\n    }\n' b'  ]\n}']
 
-def test_headers():
-    class Images:
+        # POST
+        environ = {"PATH_INFO": "/images", "REQUEST_METHOD": "POST"}
+        data = self.app(environ, lambda s, r: None)
+        assert data == []
+        assert self.app.response.body is None
+        assert self.app.response.status == 202
 
-        def get(self, req, res):
-            res.set_headers({"Content-type": "text/plain"})
-            res.set_status(200)
-            res.set_body({})
+        # # DELETE
+        environ = {"PATH_INFO": "/images", "REQUEST_METHOD": "DELETE"}
+        data = self.app(environ, lambda s, r: None)
+        assert data == []
+        assert self.app.response.body is None
+        assert self.app.response.status == 201
 
-    routes = [
-        (Images(), "/images")
-    ]
+        # PUT
+        environ = {"PATH_INFO": "/images", "REQUEST_METHOD": "PUT"}
+        data = self.app(environ, lambda s, r: None)
+        assert data == [b'{\n  "id": 1\n}']
+        assert self.app.response.body == {"id": 1}
+        assert self.app.response.status == 202
 
-    app = BobTail(routes=routes)
+        # PATCH
+        environ = {"PATH_INFO": "/images", "REQUEST_METHOD": "PATCH"}
+        data = self.app(environ, lambda s, r: None)
+        assert data == [b'{\n  "id": 1\n}']
+        assert self.app.response.body == {"id": 1}
+        assert self.app.response.status == 202
 
-    environ = {"PATH_INFO": "/images", "REQUEST_METHOD": "GET"}
-    _ = app(environ, lambda s, r: None)
-    assert app.response.headers["Content-type"] == "text/plain"
+        # Check no middleware is added
+        assert self.app.middleware.middlewares is None
+
+    def test_headers(self, bobtail_app, route_class_two):
+
+        routes = [
+            (route_class_two, "/images")
+        ]
+
+        self.app = bobtail_app(routes=routes)
+
+        # Check no middleware is added
+        assert self.app.middleware.middlewares is None
+
+        environ = {"PATH_INFO": "/images", "REQUEST_METHOD": "GET"}
+        _ = self.app(environ, lambda s, r: None)
+        assert self.app.response.headers["Content-type"] == "text/plain"
+
