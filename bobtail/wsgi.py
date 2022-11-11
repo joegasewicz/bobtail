@@ -6,6 +6,7 @@ from bobtail.status import Status
 from bobtail.exceptions import NoRoutesError, RouteClassError
 from bobtail.route import TypeRoute
 from bobtail.parser import Parser
+from bobtail.middleware import Middleware
 
 
 class BobTail:
@@ -21,6 +22,8 @@ class BobTail:
     _status: Status
 
     parse_metadata: Dict = None
+
+    middleware: Middleware
 
     def _handle_404(self):
         self.response.set_status(404)
@@ -96,3 +99,6 @@ class BobTail:
         # Process the final byte list & headers
         data = self.response._process()
         return data
+
+    def use(self, middleware):
+        self.middleware.add(middleware)
