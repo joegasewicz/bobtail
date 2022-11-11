@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import List, Tuple
+from typing import Tuple, Callable, TypeVar
 
 from bobtail.response import Response
 from bobtail.request import Request
@@ -52,4 +52,5 @@ class AbstractRoute(ABC):
         """
 
 
-TypeRoute = Tuple[AbstractRoute, str]
+Handler = TypeVar("Handler", Callable[[Request, Response], None], None)
+Route = TypeVar("Route", Tuple[AbstractRoute, str], None)

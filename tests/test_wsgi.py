@@ -1,9 +1,12 @@
 import pytest
+
 from bobtail.wsgi import BobTail
 from bobtail.request import Request
-from .mock_environ import mock_environ
+from tests.mock_environ import mock_environ
+from tests.fixtures import bobtail_app
 
-def test_handlers():
+
+def test_handlers(bobtail_app):
     class Images:
 
         def get(self, req, res):
@@ -29,7 +32,7 @@ def test_handlers():
         (Images(), "/images")
     ]
 
-    app = BobTail(routes=routes)
+    app = bobtail_app(routes=routes)
 
     # GET
     environ = {"PATH_INFO": "/images", "REQUEST_METHOD": "GET"}
@@ -65,6 +68,9 @@ def test_handlers():
     assert data == [b'{\n  "id": 1\n}']
     assert app.response.body == {"id": 1}
     assert app.response.status == 202
+
+    # Check no middleware is added
+    assert len(app.middleware.middlewares) == 0
 
 
 def test_headers():

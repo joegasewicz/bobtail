@@ -37,6 +37,23 @@ app = BobTail(routes=routes)
 ```
 pipenv run  gunicorn api:app
 ```
+
+### Middleware
+Creating custom middleware example. A Middleware object must implement `AbstractMiddleware`. 
+
+```python
+from bobtail import Request, Response
+from bobtail.middleware import AbstractMiddleware, Tail
+
+class BobtailCors(AbstractMiddleware):
+
+    def init(self, req: Request, res: Response, tail: Tail) -> None:
+        res.set_headers({
+            "Access-Control-Allow-Origin": "*",
+        })
+        tail(req, res)
+```
+
 ### Set the Headers
 You can set the headers with the `Response` object's `set_headers` method. The default headers
 are `Content-Type: application/json`.

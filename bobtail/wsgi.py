@@ -4,7 +4,7 @@ from bobtail.response import Response
 from bobtail.request import Request
 from bobtail.status import Status
 from bobtail.exceptions import NoRoutesError, RouteClassError
-from bobtail.route import TypeRoute
+from bobtail.route import Route, Handler
 from bobtail.parser import Parser
 from bobtail.middleware import Middleware
 
@@ -13,7 +13,7 @@ class BobTail:
 
     environ: Dict
 
-    routes: List[TypeRoute]
+    routes: List[Route]
 
     response: Response
 
@@ -23,15 +23,16 @@ class BobTail:
 
     parse_metadata: Dict = None
 
-    middleware: Middleware
+    middleware: Middleware = None
 
-    def _handle_404(self):
+    def _handle_404(self, req: Request, res: Response):
         self.response.set_status(404)
 
     def __init__(self, *args, **kwargs):
         if "routes" not in kwargs:
             raise NoRoutesError("Expected a list of routes")
         self.routes = kwargs["routes"]
+        self.middleware = Middleware()
 
     def init_response(self):
         self.response = Response()
@@ -45,15 +46,15 @@ class BobTail:
     def _call_handler(self, route: callable, method: str):
         if hasattr(route,  method):
             try:
-                handler = getattr(route, method)
+                handler: Handler = getattr(route, method)
                 if not handler:
-                    self._handle_404()
+                    self.middleware.call(self.request, self.response, self._handle_404)
                     return
-                handler(self.request, self.response)
+                self.middleware.call(self.request, self.response, handler)
             except Exception as exc:
                 raise RouteClassError("route class is not instantiated") from exc
         else:
-            self._handle_404()
+            self.middleware.call(self.request, self.response, self._handle_404)
 
     def _handle_route(self):
         p = Parser(self.routes, self.request.path)
@@ -79,7 +80,7 @@ class BobTail:
                     case "PATCH":
                         self._call_handler(route, "patch")
                         return
-        self._handle_404()
+        self.middleware.call(self.request, self.response, self._handle_404)
 
     def __call__(self, environ, start_response):
         self.environ = environ

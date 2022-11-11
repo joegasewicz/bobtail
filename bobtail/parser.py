@@ -1,17 +1,17 @@
 from typing import List, Dict, Optional
 
-from bobtail.route import TypeRoute
+from bobtail.route import Route
 
 
 class Parser:
-    routes: List[TypeRoute]
+    routes: List[Route]
 
     # the incoming request path
     path: str
 
     meta_data: Dict = None
 
-    def __init__(self, routes: List[TypeRoute], path):
+    def __init__(self, routes: List[Route], path):
         self.path = path
         self.routes = routes
 

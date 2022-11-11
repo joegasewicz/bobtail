@@ -24,7 +24,7 @@ class TestResponse:
     def test_content_len(self):
         byte_data = b"hello, world!"
         r = Response()
-        r.content_len(byte_data)
+        r.set_content_len(byte_data)
         expected = {
             "Content-Type": "application/json",
             "Content-Length": f"{len(byte_data)}",
