@@ -11,7 +11,7 @@ Tail = Callable[[Request, Response], None]
 class AbstractMiddleware(ABC):
 
     @abstractmethod
-    def init(self, req: Request, res: Response, tail: Tail) -> None:
+    def run(self, req: Request, res: Response, tail: Tail) -> None:
         pass
 
 
@@ -36,7 +36,7 @@ class Middleware:
             self.request = req
             self.response = res
             for middleware in self.middlewares:
-                middleware.init(self.request, self.response, self.tail)
+                middleware.run(self.request, self.response, self.tail)
             self.handler(self.request, self.response)
             return
         handler(req, res)
