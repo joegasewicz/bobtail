@@ -52,7 +52,7 @@ def middle_cors():
         def __init__(self):
             pass
 
-        def init(self, req, res, tail) -> None:
+        def run(self, req, res, tail) -> None:
             res.set_headers({
                 "Access-Control-Allow-Origin": "*",
             })
@@ -66,7 +66,7 @@ def middle_logger():
         def __init__(self):
             pass
 
-        def init(self, req, res, tail) -> None:
+        def run(self, req, res, tail) -> None:
             res.set_headers({
                 "Access-Control-Allow-Origin": "*",
             })

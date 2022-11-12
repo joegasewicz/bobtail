@@ -7,6 +7,7 @@
 ![Bobtail](bobtail.png?raw=true "Bobtail")
 A little Python http framework
 
+⚠️ *Ready to use in `v0.1.0`, production ready in `v1.0.0`*
 
 ## Install
 ```
@@ -39,8 +40,7 @@ pipenv run  gunicorn api:app
 ```
 
 ### Middleware
-Middleware is not included as part of this library but is easy to create or
-you can use  third party libraries.
+Bobtail middleware
 
 #### Using third party middleware
 ```python
@@ -65,7 +65,7 @@ from bobtail.middleware import AbstractMiddleware, Tail
 
 class BobtailCors(AbstractMiddleware):
 
-    def init(self, req: Request, res: Response, tail: Tail) -> None:
+    def run(self, req: Request, res: Response, tail: Tail) -> None:
         res.set_headers({
             "Access-Control-Allow-Origin": "*",
         })
