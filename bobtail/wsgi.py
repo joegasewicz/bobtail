@@ -60,7 +60,8 @@ class BobTail:
         p = Parser(self.routes, self.request.path)
         self.parse_metadata = p.route()
         # Set the args on the request object
-        self.request.set_args(self.parse_metadata["vars"])
+        if self.parse_metadata and "vars" in self.parse_metadata:
+            self.request.set_args(self.parse_metadata["vars"])
         for current_route in self.routes:
             route, _ = current_route
             if route.__class__.__name__ == p.get_matched():

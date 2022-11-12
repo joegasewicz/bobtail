@@ -103,3 +103,18 @@ class TestBobtail:
         _ = self.app(environ, lambda s, r: None)
         assert self.app.response.headers["Content-type"] == "text/plain"
 
+    def test_args_not_in_path(self, bobtail_app, route_class_two):
+         # Ref: https://github.com/joegasewicz/bobtail/issues/27
+        routes = [
+            (route_class_two, "/images/{id:int}")
+        ]
+
+        self.app = bobtail_app(routes=routes)
+
+        # Check no middleware is added
+        assert self.app.middleware.middlewares is None
+
+        environ = {"PATH_INFO": "/images", "REQUEST_METHOD": "GET"}
+        data = self.app(environ, lambda s, r: None)
+        assert data is not None
+
