@@ -21,6 +21,8 @@ class BobTail:
 
     _status: Status
 
+    _body: str
+
     parse_metadata: Dict = None
 
     middleware: Middleware = None
@@ -85,6 +87,8 @@ class BobTail:
 
     def __call__(self, environ, start_response):
         self.environ = environ
+        self._body = self.environ["wsgi.input"].read()
+        print(f"body -----> ", self._body)
         # Set request & response
         self.set_request()
         self.init_response()
