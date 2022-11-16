@@ -89,6 +89,7 @@ class BobTail:
         self.environ = environ
         self._body = self.environ["wsgi.input"].read()
         print(f"body -----> ", self._body)
+
         # Set request & response
         self.set_request()
         self.init_response()

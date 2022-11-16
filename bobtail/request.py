@@ -1,7 +1,8 @@
 from typing import Dict, Union
+from abc import ABC
 
 
-class Request:
+class Request(ABC):
 
     path: str
 
@@ -33,3 +34,5 @@ class Request:
 
     def set_args(self, args):
         self.args = args
+
+
