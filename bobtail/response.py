@@ -55,7 +55,6 @@ class Response:
 
     def set_status(self, value: int) -> None:
         """
-
         :param value: Sets the response status
         :type value:
         :return:

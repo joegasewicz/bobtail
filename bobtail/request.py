@@ -34,5 +34,3 @@ class Request(ABC):
 
     def set_args(self, args):
         self.args = args
-
-

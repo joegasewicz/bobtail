@@ -1,4 +1,5 @@
 import pytest
+import io
 
 
 from bobtail.wsgi import BobTail
@@ -20,6 +21,7 @@ def route_class_one():
             res.set_status(200)
 
         def post(self, req, res):
+            res.set_body(None)
             res.set_status(202)
 
         def delete(self, req, res):
@@ -72,3 +74,15 @@ def middle_logger():
             })
             tail(req, res)
     return MockLogger()
+
+
+@pytest.fixture(scope="function")
+def environ():
+    def inner(*, path="/images", method="GET", data=b''):
+        return {
+            "PATH_INFO": path or "/images",
+            "REQUEST_METHOD": method or "GET",
+            "wsgi.input": io.BytesIO(data or b'{\n    "name": "joe"\n}'),
+        }
+
+    return inner
