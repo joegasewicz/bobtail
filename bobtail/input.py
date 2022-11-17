@@ -1,1 +1,2 @@
 class Input:
+    pass

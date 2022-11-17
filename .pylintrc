@@ -13,3 +13,4 @@ disable=
     too-many-locals,
     invalid-name,
     inconsistent-return-statements,
+    too-many-instance-attributes,

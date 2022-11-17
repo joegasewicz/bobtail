@@ -1,7 +1,8 @@
 from typing import Dict, Union
+from abc import ABC
 
 
-class Request:
+class Request(ABC):
 
     path: str
 
