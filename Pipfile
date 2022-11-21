@@ -4,6 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+birman = {editable = true, path = "/Users/joegasewicz/PycharmProjects/birman"}
 
 [dev-packages]
 pytest = "*"
