@@ -12,6 +12,7 @@ setup(
     packages=["bobtail"],
     py_modules=["bobtail"],
     install_requires=[
+        "birman"
     ],
     classifiers=[
         "Programming Language :: Python :: 3.10",
