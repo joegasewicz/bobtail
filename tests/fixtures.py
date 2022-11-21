@@ -78,11 +78,17 @@ def middle_logger():
 
 @pytest.fixture(scope="function")
 def environ():
-    def inner(*, path="/images", method="GET", data=b''):
+    def inner(*, path="/images", method="GET", data=b'{\n    "name": "joe"\n}', content="text/plain"):
         return {
-            "PATH_INFO": path or "/images",
-            "REQUEST_METHOD": method or "GET",
-            "wsgi.input": io.BytesIO(data or b'{\n    "name": "joe"\n}'),
+            "PATH_INFO": path,
+            "REQUEST_METHOD": method,
+            "wsgi.input": io.BytesIO(data),
+            "CONTENT_TYPE": content,
         }
 
     return inner
+
+
+@pytest.fixture(scope="function")
+def multipart_data():
+    return b'----------------------------782797925953098016952108\r\nContent-Disposition: form-data; name=\"email\"\r\n\r\ntest@test.com\r\n----------------------------782797925953098016952108\r\nContent-Disposition: form-data; name=\"password\"\r\n\r\nwizard\r\n----------------------------782797925953098016952108--\r\n'

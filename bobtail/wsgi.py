@@ -7,6 +7,8 @@ from bobtail.exceptions import NoRoutesError, RouteClassError
 from bobtail.route import Route, Handler
 from bobtail.parser import Parser
 from bobtail.middleware import Middleware
+from bobtail.headers import ResponseHeaders, RequestHeaders
+from bobtail.wsgi_input import WSGIInput
 
 
 class BobTail:
@@ -27,6 +29,10 @@ class BobTail:
 
     middleware: Middleware = None
 
+    request_headers: RequestHeaders
+
+    response_headers: ResponseHeaders
+
     def _handle_404(self, req: Request, res: Response):
         self.response.set_status(404)
 
@@ -43,6 +49,8 @@ class BobTail:
         self.request = Request(
             path=self.environ["PATH_INFO"],
             method=self.environ["REQUEST_METHOD"],
+            byte_data=self.environ["wsgi.input"].read(),
+            headers=RequestHeaders(content_type=self.environ["CONTENT_TYPE"]),
         )
 
     def _call_handler(self, route: callable, method: str):
@@ -87,7 +95,6 @@ class BobTail:
 
     def __call__(self, environ, start_response):
         self.environ = environ
-        self._body = self.environ["wsgi.input"].read()
 
         # Set request & response
         self.set_request()

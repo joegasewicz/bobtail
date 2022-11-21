@@ -14,3 +14,4 @@ disable=
     invalid-name,
     inconsistent-return-statements,
     too-many-instance-attributes,
+    useless-parent-delegation,
