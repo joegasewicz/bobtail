@@ -120,17 +120,16 @@ req.get_json()
 # returns a string
 req.get_body()
 ```
-- Multipart form data
+- Urlencoded form data
  ```python
 # returns a pyton dict
 req.get_form_data()
 ```
-- Urlencoded form data
+- Multipart form data
  ```python
 # returns a pyton dict
 req.get_multipart_data()
 ```
-
 
 ### OOP Approach
 If you prefer to organise your routes in a more OOP approach, you can implement the
