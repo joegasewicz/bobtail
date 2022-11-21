@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "aa4f78dc8c51268a144f80bbb3909a4f264a027a7db5609647c0add1c7012774"
+            "sha256": "74ec6f7ecc3443848adb9027d7a2fb3908e4f01d78a031296f99ed27eda73510"
         },
         "pipfile-spec": 6,
         "requires": {},
@@ -15,8 +15,12 @@
     },
     "default": {
         "birman": {
-            "editable": true,
-            "path": "/Users/joegasewicz/PycharmProjects/birman"
+            "hashes": [
+                "sha256:2384c15da756b5bf156992a74d6f2daf48fca9ffca469cfc8a2d621a7ec26015",
+                "sha256:9697200861e728dc8901f4264f24a8dfb507e41c7474b86aa3282a3f7424889e"
+            ],
+            "index": "pypi",
+            "version": "==0.0.1"
         }
     },
     "develop": {
