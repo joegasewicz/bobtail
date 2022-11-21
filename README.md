@@ -93,6 +93,7 @@ class Images:
         res.set_status(202)
 
 ```
+## Request
 
 ### Request Args
 You can specify the type of `Request` arguments using curly braces & within the name & type seperated 
@@ -107,6 +108,29 @@ def get(self, req, res):
     name = req.get_args("name") # str
     is_raining = req.get_args("is_raining") # bool
 ```
+
+### Request Body
+- JSON
+ ```python
+# marshals json to a python dict
+req.get_json()
+```
+- Plain Text
+ ```python
+# returns a string
+req.get_body()
+```
+- Multipart form data
+ ```python
+# returns a pyton dict
+req.get_form_data()
+```
+- Urlencoded form data
+ ```python
+# returns a pyton dict
+req.get_multipart_data()
+```
+
 
 ### OOP Approach
 If you prefer to organise your routes in a more OOP approach, you can implement the
@@ -140,3 +164,4 @@ class Images(AbstractRoute):
         pass
 
 ```
+
