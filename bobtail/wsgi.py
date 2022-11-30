@@ -50,7 +50,7 @@ class BobTail:
             path=self.environ["PATH_INFO"],
             method=self.environ["REQUEST_METHOD"],
             byte_data=self.environ["wsgi.input"].read(),
-            headers=RequestHeaders(content_type=self.environ["CONTENT_TYPE"]),
+            headers=RequestHeaders(content_type=self.environ.get("CONTENT_TYPE")),
         )
 
     def _call_handler(self, route: callable, method: str):
