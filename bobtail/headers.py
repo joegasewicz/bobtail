@@ -3,7 +3,7 @@ from abc import ABC
 
 class BaseHeaders(ABC):
 
-    content_type: str
+    content_type: str = "application/json"
 
     def __init__(self, content_type):
         self.content_type = content_type
