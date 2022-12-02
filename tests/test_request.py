@@ -65,10 +65,12 @@ class TestRequest:
             "email": {
                 "name": "email",
                 "value": "test@test.com",
+                "type": "text",
             },
             "password": {
                 "name": "password",
                 "value": "wizard",
+                "type": "text",
             },
         }
         assert result == expected
@@ -86,10 +88,12 @@ class TestRequest:
             "email": {
                 "name": "email",
                 "value": "test@test.com",
+                "type": "text",
             },
             "password": {
                 "name": "password",
                 "value": "wizard",
+                "type": "text",
             },
         }
         assert result == expected
