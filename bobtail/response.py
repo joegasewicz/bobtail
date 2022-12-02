@@ -1,7 +1,5 @@
-from typing import Dict, Tuple, List, Optional, Self
+from typing import Dict, List, Optional
 import json
-
-from bobtail.request import Request
 
 
 class Response:
