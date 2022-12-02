@@ -9,5 +9,5 @@ birman = "0.0.2"
 [dev-packages]
 pytest = "*"
 gunicorn = "*"
-pylint = "*"
 sphinx = "*"
+pylint = "2.15.6"
