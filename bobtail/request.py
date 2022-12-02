@@ -51,7 +51,6 @@ class Request(ABC):
 
     def get_json(self) -> Dict:
         """
-
         :return:
         :rtype:
         """

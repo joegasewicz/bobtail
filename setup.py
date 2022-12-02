@@ -7,12 +7,12 @@ with open("README.md", "r") as fh:
 
 setup(
     name="bobtail",
-    version="0.0.9",
+    version="0.0.10",
     description="A little Python http framework",
     packages=["bobtail"],
     py_modules=["bobtail"],
-    requires=[
-        "birman"
+    install_requires=[
+        "birman>=0.0.2"
     ],
     classifiers=[
         "Programming Language :: Python :: 3.10",
