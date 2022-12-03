@@ -25,6 +25,7 @@ class Request(ABC):
         self.path = path
         self.method = method
         self.headers = headers
+        self.args: Dict = {}
         self.wsgi_input = WSGIInput(
             byte_data=byte_data,
             headers=self.headers,
@@ -37,6 +38,9 @@ class Request(ABC):
         :return:
         :rtype:
         """
+        if name not in self.args:
+            return None
+
         arg_value = self.args[name]["value"]
         match self.args[name]["type"]:
             case "int":
