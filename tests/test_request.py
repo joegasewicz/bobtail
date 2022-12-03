@@ -28,6 +28,27 @@ class TestRequest:
         assert name == "hello"
         assert is_raining is True
 
+    def test_get_args_if_key_not_present(self, bobtail_app, environ):
+        class Images:
+
+            def get(self, req, res):
+                pass
+
+        routes = [
+            (Images(), "/images/{id:int}")
+        ]
+
+        app = bobtail_app(routes=routes)
+
+        env = environ(path="/images/1")
+        data = app(env, lambda s, r: None)
+        assert app.request.get_arg("id") == 1
+        assert app.request.get_arg("name") == None
+
+        env = environ(path="/images")
+        data = app(env, lambda s, r: None)
+        assert app.request.get_arg("id") == None
+
     def test_get_json(self):
         req_headers = RequestHeaders("application/json")
         req = Request(
@@ -97,5 +118,3 @@ class TestRequest:
             },
         }
         assert result == expected
-
-
