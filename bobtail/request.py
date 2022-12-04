@@ -31,6 +31,9 @@ class Request(ABC):
             headers=self.headers,
         )
 
+    def get_path(self) -> str:
+        return self.path
+
     def get_arg(self, name: str) -> Union[str, int, bool]:
         """
         :param name:

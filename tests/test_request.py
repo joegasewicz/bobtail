@@ -7,6 +7,25 @@ from bobtail.headers import RequestHeaders
 
 class TestRequest:
 
+    def test_get_path(self, bobtail_app, environ):
+        class Images:
+            def get(self, req, res):
+                pass
+
+        routes = [(Images(), "/images/{id:int}")]
+
+        app = bobtail_app(routes=routes)
+
+        env = environ(path="/images/1")
+        data = app(env, lambda s, r: None)
+        req_path = app.request.get_path()
+        assert req_path == "/images/1"
+
+        env = environ(path="/images?q=monalisa")
+        data = app(env, lambda s, r: None)
+        req_path = app.request.get_path()
+        assert req_path == "/images?q=monalisa"
+
     def test_get_args(self, bobtail_app, environ):
         class Images:
 
