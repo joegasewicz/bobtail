@@ -8,3 +8,11 @@ class NoRoutesError(Exception):
 
 class RouteClassError(Exception):
     pass
+
+
+class FormDataError(Exception):
+    pass
+
+
+class MultipartFormDataError(Exception):
+    pass

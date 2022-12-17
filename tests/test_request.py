@@ -1,8 +1,17 @@
+import pytest
+
 from bobtail.wsgi import BobTail
-from tests.fixtures import bobtail_app, environ, multipart_data
+from tests.fixtures import (
+    bobtail_app,
+    environ,
+    multipart_data,
+    form_data,
+    multipart_data_with_file,
+)
 
 from bobtail.request import Request
 from bobtail.headers import RequestHeaders
+from bobtail.exceptions import FormDataError, MultipartFormDataError
 
 
 class TestRequest:
@@ -137,3 +146,42 @@ class TestRequest:
             },
         }
         assert result == expected
+
+    def test_get_form_value(self, form_data):
+        req_headers = RequestHeaders("application/x-www-form-urlencoded")
+        req = Request(
+            path="/images",
+            method="POST",
+            byte_data=form_data,
+            headers=req_headers,
+        )
+        assert req.get_form_value("password") == "wizard"
+
+        with pytest.raises(FormDataError):
+            req.get_form_value("bananas")
+
+    def test_get_multipart_value(self, multipart_data):
+        req_headers = RequestHeaders("multipart/form-data")
+        req = Request(
+            path="/images",
+            method="POST",
+            byte_data=multipart_data,
+            headers=req_headers,
+        )
+        assert req.get_multipart_value("email") == "test@test.com"
+
+        with pytest.raises(MultipartFormDataError):
+            req.get_multipart_value("bananas")
+
+    def test_get_filename_value(self, multipart_data_with_file):
+        req_headers = RequestHeaders("multipart/form-data")
+        req = Request(
+            path="/images",
+            method="POST",
+            byte_data=multipart_data_with_file,
+            headers=req_headers,
+        )
+        assert req.get_filename_value("logo") == "bobtail.png"
+
+        with pytest.raises(MultipartFormDataError):
+            req.get_filename_value("bananas")

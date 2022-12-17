@@ -3,6 +3,7 @@ from abc import ABC
 
 from bobtail.wsgi_input import WSGIInput
 from bobtail.headers import RequestHeaders
+from bobtail.exceptions import FormDataError, MultipartFormDataError
 
 
 class Request(ABC):
@@ -86,3 +87,42 @@ class Request(ABC):
         :rtype:
         """
         return self.wsgi_input.get_multipart_data()
+
+    def get_form_value(self, name: str) -> str:
+        """
+        :param name:
+        :return:
+        """
+        try:
+            data = self.get_form_data()
+            return data[name]["value"]
+        except KeyError as exc:
+            raise FormDataError(
+                f"Error getting form value for {name} field"
+            ) from exc
+
+    def get_multipart_value(self, name: str) -> str:
+        """
+        :param name:
+        :return:
+        """
+        try:
+            data = self.get_multipart_data()
+            return data[name]["value"]
+        except KeyError as exc:
+            raise MultipartFormDataError(
+                f"Error getting form value for {name} field"
+            ) from exc
+
+    def get_filename_value(self, filename: str) -> str:
+        """
+        :param filename:
+        :return:
+        """
+        try:
+            data = self.get_multipart_data()
+            return data[filename]["value"]["filename"]
+        except KeyError as exc:
+            raise MultipartFormDataError(
+                f"Filename Error: getting {filename} from multipart form data"
+            ) from exc
