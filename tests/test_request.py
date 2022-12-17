@@ -171,7 +171,7 @@ class TestRequest:
         assert req.get_multipart_value("email") == "test@test.com"
 
         with pytest.raises(MultipartFormDataError):
-            req.get_form_value("bananas")
+            req.get_multipart_value("bananas")
 
     def test_get_filename_value(self, multipart_data_with_file):
         req_headers = RequestHeaders("multipart/form-data")
@@ -184,4 +184,4 @@ class TestRequest:
         assert req.get_filename_value("logo") == "bobtail.png"
 
         with pytest.raises(MultipartFormDataError):
-            req.get_form_value("bananas")
+            req.get_filename_value("bananas")
