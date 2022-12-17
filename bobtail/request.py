@@ -96,8 +96,10 @@ class Request(ABC):
         try:
             data = self.get_form_data()
             return data[name]["value"]
-        except KeyError:
-            raise FormDataError(f"Error getting form value for {name} field")
+        except KeyError as exc:
+            raise FormDataError(
+                f"Error getting form value for {name} field"
+            ) from exc
 
     def get_multipart_value(self, name: str) -> str:
         """
@@ -107,8 +109,10 @@ class Request(ABC):
         try:
             data = self.get_multipart_data()
             return data[name]["value"]
-        except KeyError:
-            raise MultipartFormDataError(f"Error getting form value for {name} field")
+        except KeyError as exc:
+            raise MultipartFormDataError(
+                f"Error getting form value for {name} field"
+            ) from exc
 
     def get_filename_value(self, filename: str) -> str:
         """
@@ -118,5 +122,7 @@ class Request(ABC):
         try:
             data = self.get_multipart_data()
             return data[filename]["value"]["filename"]
-        except KeyError:
-            raise MultipartFormDataError(f"Filename Error: getting {filename} from multipart form data")
+        except KeyError as exc:
+            raise MultipartFormDataError(
+                f"Filename Error: getting {filename} from multipart form data"
+            ) from exc

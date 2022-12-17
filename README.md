@@ -131,6 +131,36 @@ req.get_form_data()
 req.get_multipart_data()
 ```
 
+The `Request` object provides methods to easily get form values. By default, if a form value
+doesn't exist, then either `FormDataError` or `MultipartFormDataError` exceptions will be raised.
+
+- Get Form Value
+```python
+from bobtail.exceptions import FormDataError
+try:
+    email = req.get_form_value("email")
+except FormDataError:
+    pass # handle no form value
+```
+
+- Get Multipart Form Value
+```python
+from bobtail.exceptions import MultipartFormDataError
+try:
+    email = req.get_multipart_value("email")
+except MultipartFormDataError:
+    pass # handle no multipart form value
+```
+
+- Get Multipart Form File Value
+```python
+from bobtail.exceptions import MultipartFormDataError
+try:
+    email = req.get_filename_value("image")
+except MultipartFormDataError:
+    pass # handle no file value
+```
+
 ### OOP Approach
 If you prefer to organise your routes in a more OOP approach, you can implement the
 `AbstractRoute` abstract class. It's especially useful when using an IDE like Pycharm

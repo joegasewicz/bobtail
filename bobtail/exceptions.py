@@ -16,4 +16,3 @@ class FormDataError(Exception):
 
 class MultipartFormDataError(Exception):
     pass
-
