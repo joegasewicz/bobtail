@@ -55,6 +55,7 @@ app.use(BobtailLogger())
 Middleware currently available
 - [bobtail-cors](https://github.com/joegasewicz/bobtail-cors)
 - [bobtail-logger](https://github.com/joegasewicz/bobtail-logger)
+- [bobtail-upload](https://github.com/joegasewicz/bobtail-upload)
 
 
 Creating custom middleware example. A Middleware object must implement `AbstractMiddleware`. 
