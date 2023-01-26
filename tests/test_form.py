@@ -57,7 +57,7 @@ class TestMultipartForm:
         assert isinstance(result["data"], bytes)
 
 
-    def test_get_file_name(self, multipart_data_with_file):
+    def test_get_name(self, multipart_data_with_file):
         req_headers = RequestHeaders("multipart/form-data")
         req = Request(
             path="/images",
@@ -65,12 +65,12 @@ class TestMultipartForm:
             byte_data=multipart_data_with_file,
             headers=req_headers,
         )
-        assert req.multipart.get_file_name("logo") == "bobtail.png"
+        assert req.multipart.get_name("logo") == "bobtail.png"
 
         with pytest.raises(MultipartFormDataError):
-            req.multipart.get_file_name("bananas")
+            req.multipart.get_name("bananas")
 
-    def test_get_file_data(self, multipart_data_with_file):
+    def test_get_data(self, multipart_data_with_file):
         req_headers = RequestHeaders("multipart/form-data")
         req = Request(
             path="/images",
@@ -78,13 +78,13 @@ class TestMultipartForm:
             byte_data=multipart_data_with_file,
             headers=req_headers,
         )
-        result = req.multipart.get_file_data("logo")
+        result = req.multipart.get_data("logo")
         assert isinstance(result, bytes)
 
         with pytest.raises(MultipartFormDataError):
-            req.multipart.get_file_data("bananas")
+            req.multipart.get_data("bananas")
 
-    def test_get_file_mimetype(self, multipart_data_with_file):
+    def test_get_mimetype(self, multipart_data_with_file):
         req_headers = RequestHeaders("multipart/form-data")
         req = Request(
             path="/images",
@@ -92,8 +92,8 @@ class TestMultipartForm:
             byte_data=multipart_data_with_file,
             headers=req_headers,
         )
-        result = req.multipart.get_file_mimetype("logo")
+        result = req.multipart.get_mimetype("logo")
         assert result == "image/png"
 
         with pytest.raises(MultipartFormDataError):
-            req.multipart.get_file_mimetype("bananas")
+            req.multipart.get_mimetype("bananas")

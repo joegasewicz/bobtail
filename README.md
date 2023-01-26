@@ -135,20 +135,20 @@ req.get_multipart_data()
 The `Request` object provides methods to easily get form values. By default, if a form value
 doesn't exist, then either `FormDataError` or `MultipartFormDataError` exceptions will be raised.
 
-- Get Form Value
+- Get Form Field Value
 ```python
 from bobtail.exceptions import FormDataError
 try:
-    email = req.get_form_value("email")
+    email = req.form.get_field("email")
 except FormDataError:
     pass # handle no form value
 ```
 
-- Get Multipart Form Value
+- Get Multipart Form Field Value
 ```python
 from bobtail.exceptions import MultipartFormDataError
 try:
-    email = req.get_multipart_value("email")
+    email = req.multipart.get_field("email")
 except MultipartFormDataError:
     pass # handle no multipart form value
 ```
@@ -157,9 +157,36 @@ except MultipartFormDataError:
 ```python
 from bobtail.exceptions import MultipartFormDataError
 try:
-    email = req.get_filename_value("image")
+    email = req.multipart.get_file("image")
 except MultipartFormDataError:
-    pass # handle no file value
+    pass # handle no multipart form value
+```
+
+- Get Multipart Form File Name
+```python
+from bobtail.exceptions import MultipartFormDataError
+try:
+    email = req.multipart.get_name("image")
+except MultipartFormDataError:
+    pass # handle no multipart form value
+```
+
+- Get Multipart Form File Data
+```python
+from bobtail.exceptions import MultipartFormDataError
+try:
+    email = req.multipart.get_data("image")
+except MultipartFormDataError:
+    pass # handle no multipart form value
+```
+
+- Get Multipart Form File Mimetype
+```python
+from bobtail.exceptions import MultipartFormDataError
+try:
+    email = req.multipart.get_mimetype("image")
+except MultipartFormDataError:
+    pass # handle no multipart form value
 ```
 
 ### OOP Approach

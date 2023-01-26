@@ -65,7 +65,7 @@ class MultipartForm(AbstractForm):
                 f"Error getting form value for {field_name} file"
             ) from exc
 
-    def get_file_name(self,field_name: str) -> str:
+    def get_name(self,field_name: str) -> str:
         """
         :param field_name:
         :return:
@@ -78,7 +78,7 @@ class MultipartForm(AbstractForm):
                 f"Error getting filename for {field_name} file"
             ) from exc
 
-    def get_file_data(self,field_name: str) -> bytes:
+    def get_data(self,field_name: str) -> bytes:
         """
         :param field_name:
         :return:
@@ -91,7 +91,7 @@ class MultipartForm(AbstractForm):
                 f"Error getting file data for {field_name} file"
             ) from exc
 
-    def get_file_mimetype(self,field_name: str) -> str:
+    def get_mimetype(self,field_name: str) -> str:
         """
         :param field_name:
         :return:
