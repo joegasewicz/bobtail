@@ -1,9 +1,11 @@
 from typing import Dict, Union
 from abc import ABC
+from warnings import warn
 
 from bobtail.wsgi_input import WSGIInput
 from bobtail.headers import RequestHeaders
 from bobtail.exceptions import FormDataError, MultipartFormDataError
+from bobtail.form import AbstractForm, Form, MultipartForm
 
 
 class Request(ABC):
@@ -22,6 +24,10 @@ class Request(ABC):
 
     wsgi_input: WSGIInput
 
+    form: Form
+
+    multipart: MultipartForm
+
     def __init__(self, *, path: str, method: str, byte_data: bytes, headers: RequestHeaders):
         self.path = path
         self.method = method
@@ -31,6 +37,8 @@ class Request(ABC):
             byte_data=byte_data,
             headers=self.headers,
         )
+        self.form = Form(self.wsgi_input)
+        self.multipart = MultipartForm(self.wsgi_input)
 
     def get_path(self) -> str:
         return self.path
@@ -78,6 +86,7 @@ class Request(ABC):
         :return:
         :rtype:
         """
+        warn(DeprecationWarning("[Bobtail]: Please use the Form API. See ..."))
         return self.wsgi_input.get_form_data()
 
     def get_multipart_data(self) -> Dict:
@@ -86,6 +95,7 @@ class Request(ABC):
         :return:
         :rtype:
         """
+        warn(DeprecationWarning("[Bobtail]: Please use the MultipartForm API. See ..."))
         return self.wsgi_input.get_multipart_data()
 
     def get_form_value(self, name: str) -> str:
@@ -93,6 +103,7 @@ class Request(ABC):
         :param name:
         :return:
         """
+        warn(DeprecationWarning("[Bobtail]: Please use the Form API. See ..."))
         try:
             data = self.get_form_data()
             return data[name]["value"]
@@ -106,6 +117,7 @@ class Request(ABC):
         :param name:
         :return:
         """
+        warn(DeprecationWarning("[Bobtail]: Please use the MultipartForm API. See ..."))
         try:
             data = self.get_multipart_data()
             return data[name]["value"]
@@ -119,6 +131,7 @@ class Request(ABC):
         :param filename:
         :return:
         """
+        warn(DeprecationWarning("[Bobtail]: Please use the MultipartForm API. See ..."))
         try:
             data = self.get_multipart_data()
             return data[filename]["value"]["filename"]

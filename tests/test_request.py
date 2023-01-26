@@ -1,4 +1,5 @@
 import pytest
+import pytest_deprecate
 
 from bobtail.wsgi import BobTail
 from tests.fixtures import (
@@ -101,6 +102,7 @@ class TestRequest:
         expected = 'test text'
         assert result == expected
 
+    @pytest.mark.deprecated("This feature will be dropped in 0.1.0")
     def test_get_form_data(self, multipart_data):
         req_headers = RequestHeaders("application/x-www-form-urlencoded")
         req = Request(
@@ -124,6 +126,7 @@ class TestRequest:
         }
         assert result == expected
 
+    @pytest.mark.deprecated("This feature will be dropped in 0.1.0")
     def test_get_multipart_data(self, multipart_data):
         req_headers = RequestHeaders("multipart/form-data")
         req = Request(
@@ -147,6 +150,7 @@ class TestRequest:
         }
         assert result == expected
 
+    @pytest.mark.deprecated("This feature will be dropped in 0.1.0")
     def test_get_form_value(self, form_data):
         req_headers = RequestHeaders("application/x-www-form-urlencoded")
         req = Request(
@@ -160,6 +164,7 @@ class TestRequest:
         with pytest.raises(FormDataError):
             req.get_form_value("bananas")
 
+    @pytest.mark.deprecated("This feature will be dropped in 0.1.0")
     def test_get_multipart_value(self, multipart_data):
         req_headers = RequestHeaders("multipart/form-data")
         req = Request(
@@ -173,6 +178,7 @@ class TestRequest:
         with pytest.raises(MultipartFormDataError):
             req.get_multipart_value("bananas")
 
+    @pytest.mark.deprecated("This feature will be dropped in 0.1.0")
     def test_get_filename_value(self, multipart_data_with_file):
         req_headers = RequestHeaders("multipart/form-data")
         req = Request(

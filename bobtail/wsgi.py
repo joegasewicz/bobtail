@@ -1,4 +1,4 @@
-from typing import List, Tuple, Dict
+from typing import List, Dict
 
 from bobtail.response import Response
 from bobtail.request import Request
@@ -8,7 +8,6 @@ from bobtail.route import Route, Handler
 from bobtail.parser import Parser
 from bobtail.middleware import Middleware
 from bobtail.headers import ResponseHeaders, RequestHeaders
-from bobtail.wsgi_input import WSGIInput
 
 
 class BobTail:

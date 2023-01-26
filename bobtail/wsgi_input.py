@@ -1,5 +1,4 @@
-from enum import Enum
-from typing import Union, Dict, Optional
+from typing import Dict
 import json
 from birman import Decoder
 
