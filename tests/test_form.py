@@ -30,17 +30,70 @@ class TestForm:
 
 class TestMultipartForm:
 
-    def test_get_field(self):
-        pass
+    def test_get_field(self, multipart_data):
+        req_headers = RequestHeaders("multipart/form-data")
+        req = Request(
+            path="/images",
+            method="POST",
+            byte_data=multipart_data,
+            headers=req_headers,
+        )
+        assert req.multipart.get_field("email") == "test@test.com"
 
-    def test_get_file(self):
-        pass
+        with pytest.raises(MultipartFormDataError):
+            req.multipart.get_field("bananas")
 
-    def test_get_file_name(self):
-        pass
+    def test_get_file(self, multipart_data_with_file):
+        req_headers = RequestHeaders("multipart/form-data")
+        req = Request(
+            path="/images",
+            method="POST",
+            byte_data=multipart_data_with_file,
+            headers=req_headers,
+        )
+        result = req.multipart.get_file("logo")
+        assert result["filename"] == "bobtail.png"
+        assert result["mimetype"] == "image/png"
+        assert isinstance(result["data"], bytes)
 
-    def test_get_file_data(self):
-        pass
 
-    def test_get_file_mimetype(self):
-        pass
+    def test_get_file_name(self, multipart_data_with_file):
+        req_headers = RequestHeaders("multipart/form-data")
+        req = Request(
+            path="/images",
+            method="POST",
+            byte_data=multipart_data_with_file,
+            headers=req_headers,
+        )
+        assert req.multipart.get_file_name("logo") == "bobtail.png"
+
+        with pytest.raises(MultipartFormDataError):
+            req.multipart.get_file_name("bananas")
+
+    def test_get_file_data(self, multipart_data_with_file):
+        req_headers = RequestHeaders("multipart/form-data")
+        req = Request(
+            path="/images",
+            method="POST",
+            byte_data=multipart_data_with_file,
+            headers=req_headers,
+        )
+        result = req.multipart.get_file_data("logo")
+        assert isinstance(result, bytes)
+
+        with pytest.raises(MultipartFormDataError):
+            req.multipart.get_file_data("bananas")
+
+    def test_get_file_mimetype(self, multipart_data_with_file):
+        req_headers = RequestHeaders("multipart/form-data")
+        req = Request(
+            path="/images",
+            method="POST",
+            byte_data=multipart_data_with_file,
+            headers=req_headers,
+        )
+        result = req.multipart.get_file_mimetype("logo")
+        assert result == "image/png"
+
+        with pytest.raises(MultipartFormDataError):
+            req.multipart.get_file_mimetype("bananas")
