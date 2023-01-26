@@ -1,4 +1,3 @@
-import abc
 from abc import ABC, abstractmethod
 from typing import Dict
 
@@ -37,6 +36,10 @@ class Form(AbstractForm):
 class MultipartForm(AbstractForm):
 
     def get_field(self, field_name) -> str:
+        """
+        :param field_name:
+        :return:
+        """
         try:
             data = self.wsgi_input.get_multipart_data()
             return data[field_name]["value"]
@@ -63,6 +66,10 @@ class MultipartForm(AbstractForm):
             ) from exc
 
     def get_file_name(self,field_name: str) -> str:
+        """
+        :param field_name:
+        :return:
+        """
         try:
             data = self.wsgi_input.get_multipart_data()
             return data[field_name]["value"]["filename"]
@@ -72,6 +79,10 @@ class MultipartForm(AbstractForm):
             ) from exc
 
     def get_file_data(self,field_name: str) -> bytes:
+        """
+        :param field_name:
+        :return:
+        """
         try:
             data = self.wsgi_input.get_multipart_data()
             return data[field_name]["value"]["file_data"]
@@ -81,6 +92,10 @@ class MultipartForm(AbstractForm):
             ) from exc
 
     def get_file_mimetype(self,field_name: str) -> str:
+        """
+        :param field_name:
+        :return:
+        """
         try:
             data = self.wsgi_input.get_multipart_data()
             return data[field_name]["value"]["mimetype"]
