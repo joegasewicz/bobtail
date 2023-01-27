@@ -11,9 +11,20 @@ from bobtail.headers import ResponseHeaders, RequestHeaders
 
 
 class BobTail:
-
+    """
+    :kwargs:
+    :key routes: A tuple list of :class:`~AbstractRoute` & request path
+    """
+    #: Bobtail is a micro http web framework.
     environ: Dict
 
+    #: Routes is a list of tuple :class:`~AbstractRoute` & request path pairs.
+    #: For Example::
+    #:
+    #:  routes = [
+    #:      (Images(), "/images")
+    #:  ]
+    #:
     routes: List[Route]
 
     response: Response = None
