@@ -9,6 +9,8 @@ A little Python http framework
 
 ⚠️ *Ready to use in `v0.1.0`, production ready in `v1.0.0`*
 
+Read the [docs](https://bobtail.readthedocs.io/en/latest/)
+
 ## Install
 ```
 pipenv install bobtail
