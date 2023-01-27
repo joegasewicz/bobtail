@@ -11,7 +11,7 @@ import sys
 sys.path.insert(0, os.path.abspath('..'))
 sys.setrecursionlimit(1500)
 
-project = 'bobtail'
+project = 'Bobtail'
 copyright = '2023, joegasewicz'
 author = 'joegasewicz'
 release = 'v0.0.12'

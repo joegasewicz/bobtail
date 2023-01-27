@@ -21,15 +21,9 @@ features to create Restful web applications.
 .. toctree::
    :maxdepth: 2
 
-   bobtail
-   exceptions
-   form
-   headers
-   middleware
-   request
-   response
-   route
-   status
+   installation
+   quick_start
+   api
 
 
 * :ref:`genindex`
