@@ -20,13 +20,12 @@ class Response:
             resp_data = bytes(json.dumps(self.body, indent=2), "utf-8")
             self.set_content_len(resp_data)
             return [resp_data]
-        elif self.html is not None:
+        if self.html is not None:
             resp_data = bytes(self.html, "utf-8")
             self.set_content_len(resp_data)
             return [resp_data]
-        else:
-            self.set_content_len(None)
-            return []
+        self.set_content_len(None)
+        return []
 
     def set_content_len(self, data: Optional[bytes]) -> None:
         """
@@ -82,4 +81,3 @@ class Response:
         :return:
         """
         self.html = template_str
-
