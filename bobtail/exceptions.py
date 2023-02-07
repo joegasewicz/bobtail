@@ -16,3 +16,7 @@ class FormDataError(Exception):
 
 class MultipartFormDataError(Exception):
     pass
+
+
+class TemplatePathError(Exception):
+    pass

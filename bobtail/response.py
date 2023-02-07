@@ -1,11 +1,16 @@
 from typing import Dict, List, Optional
 import json
 
+from bobtail.template_engine import TemplateEngine
+from bobtail.exceptions import TemplatePathError
+
 
 class Response:
     status: int = 200
 
     body: Dict = None
+
+    html: str = None
 
     headers: Dict = {
         "Content-Type": "application/json",
@@ -19,8 +24,13 @@ class Response:
             resp_data = bytes(json.dumps(self.body, indent=2), "utf-8")
             self.set_content_len(resp_data)
             return [resp_data]
-        self.set_content_len(None)
-        return []
+        elif self.html is not None:
+            resp_data = bytes(self.html, "utf-8")
+            self.set_content_len(resp_data)
+            return [resp_data]
+        else:
+            self.set_content_len(None)
+            return []
 
     def set_content_len(self, data: Optional[bytes]) -> None:
         """
@@ -40,7 +50,6 @@ class Response:
 
     def set_headers(self, value: Dict) -> None:
         """
-
         :param value: Excepts a dict
         :type value:
         :return:
@@ -69,3 +78,17 @@ class Response:
         :rtype:
         """
         self.body = value
+
+    def set_html(self, template_str) -> None:
+        """
+        :param value:
+        :param template:
+        :return:
+        """
+        # if template is None:
+        #     raise TemplatePathError("Template path is required")
+        # template = TemplateEngine(template, data)
+        # html_str = template.render()
+        # self.html = html_str
+        self.html = template_str
+

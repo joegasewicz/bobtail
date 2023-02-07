@@ -115,12 +115,17 @@ class BobTail:
         self._status = Status()
         status = self._status.get(self.response.status)
 
-        response_headers = [("Content-type", "application/json")]
+        response_headers = []
+
+        for k, v in self.response.headers.items():
+            t = (k, v,)
+            response_headers.insert(0, t)
 
         # Start response
         start_response(status, response_headers)
         # Process the final byte list & headers
         data = self.response._process()
+        # clean up text/html string
         return data
 
     def use(self, middleware):
