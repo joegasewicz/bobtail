@@ -1,10 +1,6 @@
 from typing import Dict, List, Optional
 import json
 
-from bobtail.template_engine import TemplateEngine
-from bobtail.exceptions import TemplatePathError
-
-
 class Response:
     status: int = 200
 
@@ -85,10 +81,5 @@ class Response:
         :param template:
         :return:
         """
-        # if template is None:
-        #     raise TemplatePathError("Template path is required")
-        # template = TemplateEngine(template, data)
-        # html_str = template.render()
-        # self.html = html_str
         self.html = template_str
 

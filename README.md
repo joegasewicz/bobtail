@@ -58,6 +58,7 @@ Middleware currently available
 - [bobtail-cors](https://github.com/joegasewicz/bobtail-cors)
 - [bobtail-logger](https://github.com/joegasewicz/bobtail-logger)
 - [bobtail-upload](https://github.com/joegasewicz/bobtail-upload)
+- [bobtail-jinja2](https://github.com/joegasewicz/bobtail-jinja2)
 
 
 Creating custom middleware example. A Middleware object must implement `AbstractMiddleware`. 
@@ -73,6 +74,23 @@ class BobtailCors(AbstractMiddleware):
             "Access-Control-Allow-Origin": "*",
         })
         tail(req, res)
+```
+
+### HTML Templates
+Bobtail does not ship with a templating engine directly, but you can install and use
+a templating engine with ease via middleware.
+
+Currently, there is middleware support for Jinja2, for example
+```python
+from bobtail_jinja2 import BobtailJinja2
+
+blog = BobTail(routes=routes)
+blog.use(BobtailJinja2(template_dir="templates"))
+```
+Then to use in a request handler
+```python
+def get(self, req: Request, res: Response) -> None:
+    res.jinja2.render(res, "layout.jinja2", data={"name": "joe"})
 ```
 
 ### Set the Headers

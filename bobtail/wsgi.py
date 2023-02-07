@@ -65,14 +65,11 @@ class BobTail:
 
     def _call_handler(self, route: callable, method: str):
         if hasattr(route,  method):
-            try:
-                handler: Handler = getattr(route, method)
-                if not handler:
-                    self.middleware.call(self.request, self.response, self._handle_404)
-                    return
-                self.middleware.call(self.request, self.response, handler)
-            except Exception as exc:
-                raise RouteClassError("route class is not instantiated") from exc
+            handler: Handler = getattr(route, method)
+            if not handler:
+                self.middleware.call(self.request, self.response, self._handle_404)
+                return
+            self.middleware.call(self.request, self.response, handler)
         else:
             self.middleware.call(self.request, self.response, self._handle_404)
 
