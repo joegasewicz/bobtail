@@ -30,3 +30,9 @@ class TestResponse:
             "Content-Length": f"{len(byte_data)}",
         }
         assert expected == r.headers
+
+    def test_set_html(self):
+        r = Response()
+        r.set_html("hello world")
+        assert r.html == "hello world"
+        assert r.headers == {'Content-Type': 'text/html'}

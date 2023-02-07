@@ -80,4 +80,5 @@ class Response:
         :param template:
         :return:
         """
+        self.set_headers({"Content-Type": "text/html"})
         self.html = template_str
