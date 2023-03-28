@@ -91,7 +91,8 @@ class Response:
 
     def set_html(self, template_str: str) -> None:
         """
-        Renders an HTML string.
+        Renders an HTML string. See :class:`~BaseOptions.TEMPLATE_DIR` for the
+        template directory path.
         For example::
 
             template_str = "<h1>Hello!</h1>"
