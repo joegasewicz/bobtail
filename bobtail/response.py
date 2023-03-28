@@ -8,6 +8,8 @@ class Response:
 
     html: str = None
 
+    static: bytes = None
+
     headers: Dict = {
         "Content-Type": "application/json",
     }
@@ -24,6 +26,9 @@ class Response:
             resp_data = bytes(self.html, "utf-8")
             self.set_content_len(resp_data)
             return [resp_data]
+        if self.static is not None:
+            self.set_content_len(self.static)
+            return [self.static]
         self.set_content_len(None)
         return []
 
@@ -82,3 +87,14 @@ class Response:
         """
         self.set_headers({"Content-Type": "text/html"})
         self.html = template_str
+
+    def set_static(self, path: str):
+        """
+        :param path:
+        :return:
+        """
+        self.set_headers({"Content-Type": "image/jpeg"})
+        file = open(path, "rb")
+        file_data = file.read()
+        file.close()
+        self.static = file_data
