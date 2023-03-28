@@ -1,6 +1,7 @@
 from typing import Dict, List, Optional
 import json
 
+
 class Response:
     status: int = 200
 
