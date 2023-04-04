@@ -1,29 +1,31 @@
 from bobtail.response import Response
+from bobtail.options import BaseOptions
+from tests.fixtures import default_options
 
 
 class TestResponse:
 
-    def test_headers(self):
+    def test_headers(self, default_options):
         headers = {"Content-Type": "text/plain"}
-        r = Response()
+        r = Response(default_options)
         r.set_headers(headers)
         assert r.headers == headers
 
-    def test_status(self):
+    def test_status(self, default_options):
         status = 404
-        r = Response()
+        r = Response(default_options)
         r.set_status(status)
         assert r.status == status
 
-    def test_body(self):
+    def test_body(self, default_options):
         json_data = {"id": 1}
-        r = Response()
+        r = Response(default_options)
         r.set_body(json_data)
         assert r.body == json_data
 
-    def test_content_len(self):
+    def test_content_len(self, default_options):
         byte_data = b"hello, world!"
-        r = Response()
+        r = Response(default_options)
         r._set_content_len(byte_data)
         expected = {
             "Content-Type": "application/json",
@@ -31,8 +33,14 @@ class TestResponse:
         }
         assert expected == r.headers
 
-    def test_set_html(self):
-        r = Response()
+    def test_set_html(self, default_options):
+        r = Response(default_options)
         r.set_html("hello world")
         assert r.html == "hello world"
         assert r.headers == {'Content-Type': 'text/html'}
+
+    def test_set_static(self, default_options):
+        r = Response(default_options)
+        fp = "/static/img/cat1.jpg"
+        r.set_static(fp)
+        assert isinstance(r.static, bytes)

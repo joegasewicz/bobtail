@@ -168,3 +168,26 @@ class TestParser:
         m = p4.get_matched()
         assert m == "Home4"
 
+
+    def test_static_route(self):
+        class Images6:
+            def get(self, req, res):
+                pass
+
+        class Videos6:
+            def get(self, req, res):
+                pass
+
+        class Files6:
+            def get(self, req, res):
+                pass
+
+        routes2 = [
+            (Videos6(), "/videos"),
+            (Files6(), "/files/new/{true:bool}"),
+            (Images6(), "/static/*"),
+        ]
+        path2 = "/static/images/sunny.png"
+        p2 = Parser(routes2, path2)
+        _ = p2.route()
+        assert p2.meta_data["matched"] == "Images6"

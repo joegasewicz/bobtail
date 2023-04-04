@@ -3,6 +3,7 @@ import io
 
 
 from bobtail.wsgi import BobTail
+from bobtail.options import BaseOptions
 
 
 @pytest.fixture(scope="function")
@@ -102,3 +103,10 @@ def multipart_data_with_file():
 @pytest.fixture(scope="function")
 def form_data():
     return b'----------------------------782797925953098016952108\r\nContent-Disposition: form-data; name=\"email\"\r\n\r\ntest@test.com\r\n----------------------------782797925953098016952108\r\nContent-Disposition: form-data; name=\"password\"\r\n\r\nwizard\r\n----------------------------782797925953098016952108--\r\n'
+
+
+@pytest.fixture(scope="function")
+def default_options():
+    class _Options(BaseOptions):
+        pass
+    return _Options()

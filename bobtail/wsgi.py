@@ -68,7 +68,7 @@ class BobTail:
         self.response.set_status(404)
 
     def _init_response(self):
-        self.response = Response()
+        self.response = Response(self.options)
 
     def _set_request(self):
         self.request = Request(

@@ -1,6 +1,8 @@
 from typing import Dict, List, Optional
 import json
 
+from bobtail.options import BaseOptions
+
 
 class Response:
     """
@@ -14,11 +16,16 @@ class Response:
 
     static: bytes = None
 
+    options: BaseOptions
+
     headers: Dict = {
         "Content-Type": "application/json",
     }
 
     _content_length: int = None
+
+    def __init__(self, options: BaseOptions):
+        self.options = options
 
     def _process(self) -> List[bytes]:
         """Process final response"""
@@ -117,6 +124,13 @@ class Response:
 
         :param path:
         """
+        if len(path.split(".")) < 1:
+            return None
+        path_seg = path.split("/static")
+        if len(path_seg) <= 1:
+            return None
+        path = path_seg[1]
+        path = f"{self.options.STATIC_DIR}{path}"
         self.set_headers({"Content-Type": "image/jpeg"})
         file = open(path, "rb")
         file_data = file.read()
