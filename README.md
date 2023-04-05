@@ -208,6 +208,15 @@ try:
 except MultipartFormDataError:
     pass # handle no multipart form value
 ```
+### Query Params
+This method returns a dict og query params where the key
+is on the left side of the `=` sign & the value is pn the right.
+For example:
+```python
+# for route "/images?name=joe&age=48"
+def get(self, req: Request, res: Response):
+    result = req.get_params() # {"name": "joe", "age": "48"}
+```
 
 ### Static Files
 To declare a static route postfix a `*` to the route's path::

@@ -81,12 +81,13 @@ def middle_logger():
 
 @pytest.fixture(scope="function")
 def environ():
-    def inner(*, path="/images", method="GET", data=b'{\n    "name": "joe"\n}', content="text/plain"):
+    def inner(*, path="/images", method="GET", data=b'{\n    "name": "joe"\n}', content="text/plain", query_str = ""):
         return {
             "PATH_INFO": path,
             "REQUEST_METHOD": method,
             "wsgi.input": io.BytesIO(data),
             "CONTENT_TYPE": content,
+            "QUERY_STRING": query_str,
         }
 
     return inner

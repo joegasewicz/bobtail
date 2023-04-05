@@ -1,3 +1,5 @@
+#'QUERY_STRING': 'name=joe&age=48', 'RAW_URI': '/posts?name=joe&age=48'
+
 mock_environ = {
     'wsgi.errors': '<gunicorn.http.wsgi.WSGIErrorsWrapper object at 0x102260d30>',
     'wsgi.version': (1, 0),

@@ -26,13 +26,22 @@ class Request(ABC):
 
     form: Form
 
+    query_str: str
+
     multipart: MultipartForm
 
-    def __init__(self, *, path: str, method: str, byte_data: bytes, headers: RequestHeaders):
+    def __init__(self, *,
+                 path: str,
+                 method: str,
+                 byte_data: bytes,
+                 headers: RequestHeaders,
+                 query_str: str,
+                 ):
         self.path = path
         self.method = method
         self.headers = headers
         self.args: Dict = {}
+        self.query_str = query_str
         self.wsgi_input = WSGIInput(
             byte_data=byte_data,
             headers=self.headers,
@@ -139,3 +148,23 @@ class Request(ABC):
             raise MultipartFormDataError(
                 f"Filename Error: getting {filename} from multipart form data"
             ) from exc
+
+    def get_params(self) -> Dict:
+        """
+        This method returns a dict og query params where the key
+        is on the left side of the `=` sign & the value is pn the right.
+        For example:
+
+            # for route "/images?name=joe&age=48"
+
+            def get(self, req: Request, res: Response):
+                result = req.get_params() # {"name": "joe", "age": "48"}
+
+        :return: Dict
+        """
+        param_dict = {}
+        pl = self.query_str.split("&")
+        for kv in pl:
+            k, v = kv.split("=")
+            param_dict[k] = v
+        return param_dict

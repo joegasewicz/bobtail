@@ -114,11 +114,12 @@ class TestBobtail:
         self.app = bobtail_app(routes=routes)
 
         # PATCH
-        env = environ(method="PATCH")
+        env = environ(method="PATCH", query_str="name=joe&age=48")
         data = self.app(env, lambda s, r: None)
         assert data == [b'{\n  "id": 1\n}']
         assert self.app.response.body == {"id": 1}
         assert self.app.response.status == 202
+        assert self.app.request.get_params() == {"name": "joe", "age": "48"}
 
         # Check no middleware is added
         assert self.app.middleware.middlewares is None
