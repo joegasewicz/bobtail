@@ -23,8 +23,8 @@ features to create Restful web applications.
 
    installation
    quick_start
-   tutorial
    api
+   tutorial
 
 * :ref:`genindex`
 * :ref:`modindex`
