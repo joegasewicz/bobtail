@@ -1,5 +1,5 @@
-Api
-===
+Bobtail API
+===========
 .. toctree::
     :maxdepth: 2
 
