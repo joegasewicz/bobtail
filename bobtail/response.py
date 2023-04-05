@@ -177,7 +177,7 @@ class Response:
         path = path_seg[1]
         path = f"{self.options.STATIC_DIR}{path}"
         self.set_headers({"Content-Type": "image/jpeg"})
-        file = open(path, "rb")
-        file_data = file.read()
-        file.close()
+        with open(path, "rb") as f:
+            file_data = f.read()
+            f.close()
         self.static = file_data

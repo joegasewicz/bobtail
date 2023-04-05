@@ -152,7 +152,8 @@ class BobTail:
             # Here we are using `bobtail-logger` logging middleware
             app.use(BobtailLogger())
 
-        Creating custom middleware example. A Middleware object must implement :class:`AbstractMiddleware`.
+        Creating custom middleware example.
+        A Middleware object must implement :class:`AbstractMiddleware`.
         For example::
 
             from bobtail import Request, Response
