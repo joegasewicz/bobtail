@@ -30,7 +30,13 @@ class Request(ABC):
 
     multipart: MultipartForm
 
-    def __init__(self, *, path: str, method: str, byte_data: bytes, headers: RequestHeaders, query_str: str):
+    def __init__(self, *,
+                 path: str,
+                 method: str,
+                 byte_data: bytes,
+                 headers: RequestHeaders,
+                 query_str: str,
+                 ):
         self.path = path
         self.method = method
         self.headers = headers
