@@ -8,8 +8,10 @@ from bobtail.options import BaseOptions
 
 @pytest.fixture(scope="function")
 def bobtail_app():
+    class _Options(BaseOptions):
+        pass
     def inner(*, routes):
-        return BobTail(routes=routes)
+        return BobTail(routes=routes, options=_Options)
     return inner
 
 

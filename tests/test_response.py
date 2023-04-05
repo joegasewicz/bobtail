@@ -40,7 +40,9 @@ class TestResponse:
         assert r.headers == {'Content-Type': 'text/html'}
 
     def test_set_static(self, default_options):
-        r = Response(default_options)
-        fp = "/static/img/cat1.jpg"
+        class _Option(BaseOptions):
+            STATIC_DIR = "tests/static"
+        r = Response(_Option())
+        fp = "tests/static/img/cat1.jpg"
         r.set_static(fp)
         assert isinstance(r.static, bytes)
