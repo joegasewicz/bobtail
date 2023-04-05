@@ -42,7 +42,10 @@ class Parser:
             split_path_vals = self.meta_data["path"]["split"]
             # check if the incoming request path is longer than the stored route path
             if len(split_route_vals) != len(split_path_vals):
-                break
+                # if * is in the last segment then skip and match
+                last_segment = split_route_vals[len(split_route_vals)-1]
+                if last_segment != "*":
+                    continue
             # route_segment - the assigned route handlers path
             _route_vars = {}
             for i, route_segment in enumerate(split_route_vals):
@@ -55,6 +58,9 @@ class Parser:
                     return self.meta_data["routes"][k]
                 # Test route matches path
                 if route_segment[0] != "{" and route_segment != path_segment:
+                    if route_segment == "*":
+                        self.meta_data["matched"] = k
+                        return self.meta_data["routes"][k]
                     # No match, break out of this route class
                     break
                 if route_segment[0] == "{":

@@ -8,6 +8,8 @@ from bobtail.route import Route, Handler
 from bobtail.parser import Parser
 from bobtail.middleware import Middleware
 from bobtail.headers import ResponseHeaders, RequestHeaders
+from bobtail.options import BaseOptions
+from bobtail.middleware import AbstractMiddleware
 
 
 class BobTail:
@@ -27,6 +29,16 @@ class BobTail:
     #:
     routes: List[Route]
 
+    #: Options (Optional). See :class:`~BaseOptions` for option list. Base options
+    #: can be overriden & or set on a concrete BaseOptions instance.
+    #: For Example::
+    #:
+    #:  class Options(BaseOptions):
+    #:      STATIC_DIR = "app/static"
+    #:      TEMPLATE_DIR = "app/templates"
+    #:
+    options: BaseOptions
+
     response: Response = None
 
     request: Request
@@ -43,19 +55,22 @@ class BobTail:
 
     response_headers: ResponseHeaders
 
-    def _handle_404(self, req: Request, res: Response):
-        self.response.set_status(404)
-
     def __init__(self, *args, **kwargs):
         if "routes" not in kwargs:
             raise NoRoutesError("Expected a list of routes")
         self.routes = kwargs["routes"]
+        _options = kwargs.get("options")
+        if _options:
+            self.options = _options
         self.middleware = Middleware()
 
-    def init_response(self):
-        self.response = Response()
+    def _handle_404(self, req: Request, res: Response):
+        self.response.set_status(404)
 
-    def set_request(self):
+    def _init_response(self):
+        self.response = Response(self.options)
+
+    def _set_request(self):
         self.request = Request(
             path=self.environ["PATH_INFO"],
             method=self.environ["REQUEST_METHOD"],
@@ -104,8 +119,8 @@ class BobTail:
         self.environ = environ
 
         # Set request & response
-        self.set_request()
-        self.init_response()
+        self._set_request()
+        self._init_response()
         # Call route handler with default response
         self._handle_route()
 
@@ -125,5 +140,33 @@ class BobTail:
         # clean up text/html string
         return data
 
-    def use(self, middleware):
+    def use(self, middleware: AbstractMiddleware):
+        """
+        Enables using third party middleware.
+        For example::
+
+            from bobttail_logger import BobtailLogger
+
+            app = Bobtail(routes=routes)
+
+            # Here we are using `bobtail-logger` logging middleware
+            app.use(BobtailLogger())
+
+        Creating custom middleware example. A Middleware object must implement :class:`AbstractMiddleware`.
+        For example::
+
+            from bobtail import Request, Response
+            from bobtail.middleware import AbstractMiddleware, Tail
+
+            class BobtailCors(AbstractMiddleware):
+
+                def run(self, req: Request, res: Response, tail: Tail) -> None:
+                    res.set_headers({
+                        "Access-Control-Allow-Origin": "*",
+                    })
+                    tail(req, res)
+
+        :param middleware: :class:`AbstractMiddleware`
+        :return: None
+        """
         self.middleware.add(middleware)
