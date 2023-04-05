@@ -26,7 +26,6 @@ features to create Restful web applications.
    tutorial
    api
 
-
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`

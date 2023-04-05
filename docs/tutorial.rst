@@ -4,6 +4,3 @@ Tutorial
     :maxdepth: 2
 
     static_files
-
-
-
