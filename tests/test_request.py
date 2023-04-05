@@ -81,6 +81,7 @@ class TestRequest:
     def test_get_json(self):
         req_headers = RequestHeaders("application/json")
         req = Request(
+            query_str="",
             path="/images",
             method="POST",
             byte_data=b'{\n    "name": "joe"\n, "email": "joe@email.com"\n}',
@@ -93,6 +94,7 @@ class TestRequest:
     def test_get_body(self):
         req_headers = RequestHeaders("application/json")
         req = Request(
+            query_str="",
             path="/images",
             method="POST",
             byte_data=b'test text',
@@ -102,10 +104,24 @@ class TestRequest:
         expected = 'test text'
         assert result == expected
 
+    def test_get_params(self):
+        req_headers = RequestHeaders("application/json")
+        req = Request(
+            query_str="name=joe&age=48",
+            path="/images",
+            method="GET",
+            byte_data=b'test text',
+            headers=req_headers,
+        )
+        result = req.get_params()
+        expected = {"name": "joe", "age": "48"}
+        assert result == expected
+
     @pytest.mark.deprecated("This feature will be dropped in 0.1.0")
     def test_get_form_data(self, multipart_data):
         req_headers = RequestHeaders("application/x-www-form-urlencoded")
         req = Request(
+            query_str="",
             path="/images",
             method="POST",
             byte_data=multipart_data,
@@ -130,6 +146,7 @@ class TestRequest:
     def test_get_multipart_data(self, multipart_data):
         req_headers = RequestHeaders("multipart/form-data")
         req = Request(
+            query_str="",
             path="/images",
             method="POST",
             byte_data=multipart_data,
@@ -154,6 +171,7 @@ class TestRequest:
     def test_get_form_value(self, form_data):
         req_headers = RequestHeaders("application/x-www-form-urlencoded")
         req = Request(
+            query_str="",
             path="/images",
             method="POST",
             byte_data=form_data,
@@ -168,6 +186,7 @@ class TestRequest:
     def test_get_multipart_value(self, multipart_data):
         req_headers = RequestHeaders("multipart/form-data")
         req = Request(
+            query_str="",
             path="/images",
             method="POST",
             byte_data=multipart_data,
@@ -182,6 +201,7 @@ class TestRequest:
     def test_get_filename_value(self, multipart_data_with_file):
         req_headers = RequestHeaders("multipart/form-data")
         req = Request(
+            query_str="",
             path="/images",
             method="POST",
             byte_data=multipart_data_with_file,

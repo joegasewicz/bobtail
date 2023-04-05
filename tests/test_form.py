@@ -18,6 +18,7 @@ class TestForm:
     def test_get_field(self, form_data):
         req_headers = RequestHeaders("application/x-www-form-urlencoded")
         req = Request(
+            query_str="",
             path="/images",
             method="POST",
             byte_data=form_data,
@@ -33,6 +34,7 @@ class TestMultipartForm:
     def test_get_field(self, multipart_data):
         req_headers = RequestHeaders("multipart/form-data")
         req = Request(
+            query_str="",
             path="/images",
             method="POST",
             byte_data=multipart_data,
@@ -46,6 +48,7 @@ class TestMultipartForm:
     def test_get_file(self, multipart_data_with_file):
         req_headers = RequestHeaders("multipart/form-data")
         req = Request(
+            query_str="",
             path="/images",
             method="POST",
             byte_data=multipart_data_with_file,
@@ -60,6 +63,7 @@ class TestMultipartForm:
     def test_get_name(self, multipart_data_with_file):
         req_headers = RequestHeaders("multipart/form-data")
         req = Request(
+            query_str="",
             path="/images",
             method="POST",
             byte_data=multipart_data_with_file,
@@ -73,6 +77,7 @@ class TestMultipartForm:
     def test_get_data(self, multipart_data_with_file):
         req_headers = RequestHeaders("multipart/form-data")
         req = Request(
+            query_str="",
             path="/images",
             method="POST",
             byte_data=multipart_data_with_file,
@@ -87,6 +92,7 @@ class TestMultipartForm:
     def test_get_mimetype(self, multipart_data_with_file):
         req_headers = RequestHeaders("multipart/form-data")
         req = Request(
+            query_str="",
             path="/images",
             method="POST",
             byte_data=multipart_data_with_file,
