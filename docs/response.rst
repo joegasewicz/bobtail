@@ -1,4 +1,4 @@
 Response
 ========
-.. automodule:: Response
+.. automodule:: bobtail.response
     :members:
