@@ -98,6 +98,7 @@ class BobTail:
     def _handle_route(self):
         p = Parser(self.routes, self.request.path)
         self.parse_metadata = p.route()
+        print("wsgi , p ---> ", p.meta_data)
         # Set the args on the request object
         if self.parse_metadata and "vars" in self.parse_metadata:
             self.request.set_args(self.parse_metadata["vars"])
@@ -120,7 +121,8 @@ class BobTail:
                         return
                     case "PATCH":
                         self._call_handler(route, "patch")
-                        return        # If there are no matches & no 404 route set status to 404
+                        return
+                # If there are no matches & no 404 route set status to 404
                 if p.get_matched() is None:
                     self.response.status = 404
 
