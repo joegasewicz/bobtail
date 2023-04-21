@@ -12,7 +12,7 @@ class Parser:
     meta_data: Dict = None
 
     def __init__(self, routes: List[Route], path):
-        self.path = path
+        self.path = path or "/"
         self.routes = routes
 
     def _match(self) -> Dict:
@@ -130,4 +130,6 @@ class Parser:
         :return:
         :rtype:
         """
+        if not self.meta_data or "matched" not in self.meta_data:
+            return None
         return self.meta_data["matched"]

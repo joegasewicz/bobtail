@@ -54,3 +54,10 @@ class AbstractRoute(ABC):
 
 Handler = TypeVar("Handler", Callable[[Request, Response], None], None)
 Route = TypeVar("Route", Tuple[AbstractRoute, str], None)
+
+
+def create_favicon_route():
+    class FaviconRoute:
+        def get(self, req: Request, res: Response):
+            res.set_status(404)
+    return FaviconRoute()
