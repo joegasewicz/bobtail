@@ -22,7 +22,7 @@ class TestBobtail:
 
             def get(self, req, res):
                 res.set_headers({"Content-type": "text/plain"})
-                res.set_status(200)
+                res.set_status(202)
                 res.set_body({})
 
         routes = [
@@ -42,6 +42,7 @@ class TestBobtail:
         env = environ()
         _ = self.app(env, lambda s, r: None)
         assert self.app.response.headers["Access-Control-Allow-Origin"] == "*"
+        assert self.app.response.status == 202
 
     def test_handlers_get(self, bobtail_app, route_class_one, environ):
 

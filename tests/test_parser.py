@@ -113,6 +113,31 @@ class TestParser:
         }
         assert result == expected
 
+    def test_route_index_route2(self):
+        class Route1:
+            def get(self, req, res):
+                res.set_status(201)
+
+        class Route2:
+            def get(self, req, res):
+                res.set_status(202)
+
+        _routes3 = [
+            (Route2(), "/"),
+            (Route1(), "/route2"),
+        ]
+        path = ""
+        p3 = Parser(_routes3, path)
+        result = p3.route()
+        expected = {
+            'class': 'Route2',
+            'path': '/',
+            'route': '/',
+            'split': [''],
+            'vars': None,
+        }
+        assert result == expected
+
     def test_extra_segments(self):
         class Images6:
             def get(self, req, res):

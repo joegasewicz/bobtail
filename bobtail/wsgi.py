@@ -4,7 +4,7 @@ from bobtail.response import Response
 from bobtail.request import Request
 from bobtail.status import Status
 from bobtail.exceptions import NoRoutesError, RouteClassError
-from bobtail.route import Route, Handler
+from bobtail.route import Route, Handler, create_favicon_route
 from bobtail.parser import Parser
 from bobtail.middleware import Middleware
 from bobtail.headers import ResponseHeaders, RequestHeaders
@@ -59,9 +59,15 @@ class BobTail:
         if "routes" not in kwargs:
             raise NoRoutesError("Expected a list of routes")
         self.routes = kwargs["routes"]
+        # append a default favicon route to set status to 404
+        default_fav = self._default_favicon_route(self.routes)
+        if default_fav:
+            self.routes.append(default_fav)
         _options = kwargs.get("options")
         if _options:
             self.options = _options
+        else:
+            self.options = BaseOptions()
         self.middleware = Middleware()
 
     def _handle_404(self, req: Request, res: Response):
@@ -92,12 +98,14 @@ class BobTail:
     def _handle_route(self):
         p = Parser(self.routes, self.request.path)
         self.parse_metadata = p.route()
+        print("wsgi , p ---> ", p.meta_data)
         # Set the args on the request object
         if self.parse_metadata and "vars" in self.parse_metadata:
             self.request.set_args(self.parse_metadata["vars"])
         for current_route in self.routes:
             route, _ = current_route
-            if route.__class__.__name__ == p.get_matched():
+            matched_route = p.get_matched()
+            if route.__class__.__name__ == matched_route:
                 match self.request.method:
                     case "GET":
                         self._call_handler(route, "get")
@@ -114,6 +122,10 @@ class BobTail:
                     case "PATCH":
                         self._call_handler(route, "patch")
                         return
+                # If there are no matches & no 404 route set status to 404
+                if p.get_matched() is None:
+                    self.response.status = 404
+
         self.middleware.call(self.request, self.response, self._handle_404)
 
     def __call__(self, environ, start_response):
@@ -172,3 +184,10 @@ class BobTail:
         :return: None
         """
         self.middleware.add(middleware)
+
+    @staticmethod
+    def _default_favicon_route(routes: List[Route]) -> Route:
+        for r in routes:
+            if r[1] == "/favicon.ico":
+                return None
+        return create_favicon_route(), "/favicon.ico"

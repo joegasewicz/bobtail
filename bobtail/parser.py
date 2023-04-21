@@ -12,7 +12,7 @@ class Parser:
     meta_data: Dict = None
 
     def __init__(self, routes: List[Route], path):
-        self.path = path
+        self.path = path or "/"
         self.routes = routes
 
     def _match(self) -> Dict:
@@ -57,19 +57,20 @@ class Parser:
                     self._set_metadata(k, path_segment, None, None)
                     return self.meta_data["routes"][k]
                 # Test route matches path
-                if route_segment[0] != "{" and route_segment != path_segment:
-                    if route_segment == "*":
-                        self.meta_data["matched"] = k
-                        return self.meta_data["routes"][k]
-                    # No match, break out of this route class
-                    break
-                if route_segment[0] == "{":
-                    # If we reach this point then store the vars
-                    n, t = route_segment[1:-1].split(":")
-                    self._set_metadata(k, path_segment, t, n)
+                if route_segment:
+                    if route_segment[0] != "{" and route_segment != path_segment:
+                        if route_segment == "*":
+                            self.meta_data["matched"] = k
+                            return self.meta_data["routes"][k]
+                        # No match, break out of this route class
+                        break
+                    if route_segment[0] == "{":
+                        # If we reach this point then store the vars
+                        n, t = route_segment[1:-1].split(":")
+                        self._set_metadata(k, path_segment, t, n)
                 if (len(split_path_vals) - 1) == i:
-                    self.meta_data["matched"] = k
-                    return self.meta_data["routes"][k]
+                    if self.meta_data["routes"][k]["route"] == self.path:
+                        self.meta_data["matched"] = k
 
     def _set_metadata(
             self,
@@ -130,4 +131,6 @@ class Parser:
         :return:
         :rtype:
         """
+        if not self.meta_data or "matched" not in self.meta_data:
+            return None
         return self.meta_data["matched"]
