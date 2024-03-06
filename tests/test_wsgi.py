@@ -1,3 +1,5 @@
+import pytest
+
 from tests.fixtures import bobtail_app
 from tests.fixtures import (
     route_class_one,
@@ -153,4 +155,16 @@ class TestBobtail:
         env = environ()
         data = self.app(env, lambda s, r: None)
         assert data is not None
+
+    def test_no_options(self, environ):
+        self.app = BobTail(routes=[])
+        env = environ()
+        try:
+            _ = self.app(env, lambda s, r: None)
+        except AttributeError:
+            pytest.fail("Default options are not set!")
+
+        assert self.app.options.PORT == 8000
+        assert self.app.options.STATIC_DIR is "static"
+        assert self.app.options.TEMPLATE_DIR is "templates"
 
