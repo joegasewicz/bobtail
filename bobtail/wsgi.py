@@ -62,6 +62,11 @@ class BobTail:
         _options = kwargs.get("options")
         if _options:
             self.options = _options
+        else:
+            class DefaultOptions(BaseOptions):
+                pass
+
+            self.options = DefaultOptions()
         self.middleware = Middleware()
 
     def _handle_404(self, req: Request, res: Response):
