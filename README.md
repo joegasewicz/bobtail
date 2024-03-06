@@ -20,7 +20,6 @@ pipenv install gunicorn
 ### Getting Started
 An example of the smallest Bobtail app
 ```python
-from typing import Tuple, Optional, Dict
 from bobtail import BobTail, AbstractRoute, Request, Response
 
 class Images:
@@ -33,20 +32,29 @@ routes = [
 ]
 
 app = BobTail(routes=routes)
-
 ```
 
 ### Run
 ```
 pipenv run  gunicorn api:app
 ```
+### Options
+To define port, static directory, template directory etc. you can
+create a concrete version of the BaseOptions abstract class. See the [docs](https://bobtail.readthedocs.io/en/latest/) for more info.
+```python
+from bobtail.options import BaseOptions
 
+class Options(BaseOptions):
+    PORT = 8001
+
+app = Bobtail(Options)
+```
 ### Middleware
 Bobtail middleware
 
 #### Using third party middleware
 ```python
-from bobttail_logger import BobtailLogger
+from bobtail_logger import BobtailLogger
 
 app = Bobtail(routes=routes)
 
