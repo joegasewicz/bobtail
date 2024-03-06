@@ -40,7 +40,7 @@ pipenv run  gunicorn api:app
 ```
 ### Options
 To define port, static directory, template directory etc. you can
-create a concrete version of the BaseOptions abstract class. See the [docs](https://bobtail.readthedocs.io/en/latest/) for more info.
+create a concrete version of the BaseOptions abstract class. See the [docs](https://bobtail.readthedocs.io/en/latest/options.html) for more info.
 ```python
 from bobtail.options import BaseOptions
 
