@@ -4,6 +4,7 @@ Bobtail API
     :maxdepth: 2
 
     bobtail
+    options
     exceptions
     form
     headers
