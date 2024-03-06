@@ -30,12 +30,17 @@ class BobTail:
     routes: List[Route]
 
     #: Options (Optional). See :class:`~BaseOptions` for option list. Base options
-    #: can be overriden & or set on a concrete BaseOptions instance.
+    #: can be overridden & or set on a concrete BaseOptions instance.
     #: For Example::
     #:
+    #:  from bobtail.options import BaseOptions
+    #:
     #:  class Options(BaseOptions):
-    #:      STATIC_DIR = "app/static"
-    #:      TEMPLATE_DIR = "app/templates"
+    #:      PORT = 8000                     # set by default
+    #:      STATIC_DIR = "app/static"       # set by default
+    #:      TEMPLATE_DIR = "app/templates"  # set by default
+    #:
+    #:  app = Bobtail(Options, routes=[])
     #:
     options: BaseOptions
 
