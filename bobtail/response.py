@@ -2,6 +2,7 @@ from typing import Dict, List, Optional
 import json
 
 from bobtail.options import BaseOptions
+from bobtail.exceptions import StaticFileError
 
 
 class Response:
@@ -137,7 +138,7 @@ class Response:
 
                 class Static(AbstractRoute):
                     def get(self, req: Request, res: Response) -> None:
-                        res.set_static("/static/imgs/cat1.jpg")
+                        res.set_static(req.path)
 
         You can set the static file path using the :class:`~BaseOptions`.
         For example::
@@ -148,7 +149,7 @@ class Response:
                 # Now in a route handler we can access static directory the via options
                 class Static(AbstractRoute):
                     def get(self, req: Request, res: Response) -> None:
-                        res.set_static(f"{res.options.STATIC_DIR}/imgs/cat1.jpg")
+                        res.set_static(req.path)
 
         By default, `STATIC_DIR` is set to `/static`, if your static file is nested
         within a Python package, for example `app/static` the set as `STATIC_DIR = "app/static"`
@@ -175,9 +176,20 @@ class Response:
         if len(path_seg) <= 1:
             return None
         path = path_seg[1]
-        path = f"{self.options.STATIC_DIR}{path}"
-        self.set_headers({"Content-Type": "image/jpeg"})
-        with open(path, "rb") as f:
-            file_data = f.read()
-            f.close()
-        self.static = file_data
+        try:
+            file_suffix = path.split("/")[-1:][0].split(".")[-1:][0]
+            path = f"{self.options.STATIC_DIR}{path}"
+            if file_suffix in ("jpg", "jpeg", "png"):
+                self.set_headers({"Content-Type": "image/jpeg"})
+        except Exception as exc:
+            self.set_status(500)
+            raise StaticFileError(
+                f"Error getting filetype from static file path - {path}"
+            ) from exc
+        try:
+            with open(path, "rb") as f:
+                file_data = f.read()
+                f.close()
+            self.static = file_data
+        except FileNotFoundError:
+            self.set_status(404)

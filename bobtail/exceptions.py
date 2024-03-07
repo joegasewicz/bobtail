@@ -20,3 +20,7 @@ class MultipartFormDataError(Exception):
 
 class TemplatePathError(Exception):
     pass
+
+
+class StaticFileError(Exception):
+    pass

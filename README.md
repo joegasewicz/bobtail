@@ -250,7 +250,7 @@ class sets the `STATIC_DIR` directory.
 
     class Static(AbstractRoute):
         def get(self, req: Request, res: Response) -> None:
-            res.set_static("/static/imgs/cat1.jpg")
+            res.set_static(req.path)
 ```
 You can set the static file path using the :class:`~BaseOptions`.
 ```python
@@ -261,7 +261,7 @@ class Options(BaseOptions):
 # Now in a route handler we can access static directory the via options
 class Static(AbstractRoute):
     def get(self, req: Request, res: Response) -> None:
-        res.set_static(f"{res.options.STATIC_DIR}/imgs/cat1.jpg")
+        res.set_static(req.path)
 ```
 By default, `STATIC_DIR` is set to `/static`, if your static file is nested
 within a Python package, for example `app/static` the set as `STATIC_DIR = "app/static"`
