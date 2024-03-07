@@ -187,7 +187,7 @@ class Response:
             elif file_suffix in ("mpeg", "x-ms-wma", "vnd.rn-realaudio", "x-wav"):
                 self.set_headers({"Content-Type": f"audio/{file_suffix}"})
             else:
-                self.set_headers({"Content-Type": f"text/plain"})
+                self.set_headers({"Content-Type": "text/plain"})
 
         except Exception as exc:
             self.set_status(500)
