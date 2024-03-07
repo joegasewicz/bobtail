@@ -5,6 +5,7 @@ name = "pypi"
 
 [packages]
 birman = "0.0.2"
+sphinx-rtd-theme = "*"
 
 [dev-packages]
 pytest = "*"
