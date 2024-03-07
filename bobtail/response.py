@@ -181,7 +181,7 @@ class Response:
             if file_suffix in ("jpg", "jpeg", "png", "gif", "tiff", "svg+xml", "x-icon"):
                 self.set_headers({"Content-Type": f"image/{file_suffix}"})
             elif file_suffix == "css":
-                self.set_headers({"Content-Type": f"text/css"})
+                self.set_headers({"Content-Type": "text/css"})
             elif file_suffix in ("mpeg", "mp4", "quicktime", "webm", "x-ms-wmv", "x-msvideo", "x-flv"):
                 self.set_headers({"Content-Type": f"video/{file_suffix}"})
             elif file_suffix in ("mpeg", "x-ms-wma", "vnd.rn-realaudio", "x-wav"):
