@@ -4,7 +4,6 @@ import json
 from bobtail.options import BaseOptions
 from bobtail.exceptions import StaticFileError
 
-
 class Response:
     """
     The :class:`Response` object is available from within a Route method.
@@ -179,8 +178,17 @@ class Response:
         try:
             file_suffix = path.split("/")[-1:][0].split(".")[-1:][0]
             path = f"{self.options.STATIC_DIR}{path}"
-            if file_suffix in ("jpg", "jpeg", "png"):
-                self.set_headers({"Content-Type": "image/jpeg"})
+            if file_suffix in ("jpg", "jpeg", "png", "gif", "tiff", "svg+xml", "x-icon"):
+                self.set_headers({"Content-Type": f"image/{file_suffix}"})
+            elif file_suffix == "css":
+                self.set_headers({"Content-Type": f"text/css"})
+            elif file_suffix in ("mpeg", "mp4", "quicktime", "webm", "x-ms-wmv", "x-msvideo", "x-flv"):
+                self.set_headers({"Content-Type": f"video/{file_suffix}"})
+            elif file_suffix in ("mpeg", "x-ms-wma", "vnd.rn-realaudio", "x-wav"):
+                self.set_headers({"Content-Type": f"audio/{file_suffix}"})
+            else:
+                self.set_headers({"Content-Type": f"text/plain"})
+
         except Exception as exc:
             self.set_status(500)
             raise StaticFileError(
