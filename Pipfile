@@ -16,6 +16,7 @@ tox = "*"
 pip = "*"
 sphinx-rtd-theme = "*"
 pylint = "*"
+# below pkgs are for py310 running pylint in CI
 tomli = "*"
 typing-extensions = "*"
 dill = "*"
