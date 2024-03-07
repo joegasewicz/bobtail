@@ -5,6 +5,7 @@ name = "pypi"
 
 [packages]
 birman = "0.0.2"
+sphinx-rtd-theme = "*"
 
 [dev-packages]
 pytest = "*"
@@ -14,6 +15,4 @@ pylint = "2.15.6"
 pytest-deprecate = "*"
 tox = "*"
 pip = "*"
-install = "*"
-sphinx-rtd-theme = "1.2.2"
-
+sphinx-rtd-theme = "*"
