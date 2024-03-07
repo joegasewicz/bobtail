@@ -3,7 +3,13 @@ import json
 
 from bobtail.options import BaseOptions
 from bobtail.exceptions import StaticFileError
-
+from bobtail.static_files import (
+    AUDIO_FILETYPE ,
+    IMAGE_FILETYPE,
+    StaticFiles,
+    TXT_FILETYPE,
+    VIDEO_FILETYPE,
+)
 
 class Response:
     """
@@ -179,8 +185,18 @@ class Response:
         try:
             file_suffix = path.split("/")[-1:][0].split(".")[-1:][0]
             path = f"{self.options.STATIC_DIR}{path}"
-            if file_suffix in ("jpg", "jpeg", "png"):
-                self.set_headers({"Content-Type": "image/jpeg"})
+
+            if file_suffix in IMAGE_FILETYPE:
+                StaticFiles(self, "image").set_headers(file_suffix)
+            elif file_suffix == "css":
+                StaticFiles(self, "text").set_headers(file_suffix)
+            elif file_suffix in VIDEO_FILETYPE:
+                StaticFiles(self, "video").set_headers(file_suffix)
+            elif file_suffix in AUDIO_FILETYPE:
+                StaticFiles(self, "audio").set_headers(file_suffix)
+            else:
+                StaticFiles(self, "text").set_headers("plain")
+
         except Exception as exc:
             self.set_status(500)
             raise StaticFileError(
