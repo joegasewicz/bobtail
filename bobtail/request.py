@@ -30,7 +30,7 @@ class Request(ABC):
 
     multipart: MultipartForm
 
-    def __init__(self, *,
+    def __init__(self, *,  # pylint: disable=too-many-arguments
                  path: str,
                  method: str,
                  byte_data: bytes,

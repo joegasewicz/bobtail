@@ -7,7 +7,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name="bobtail",
-    version="0.0.25",
+    version="0.0.26",
     description="A little Python http framework",
     packages=["bobtail"],
     py_modules=["bobtail"],
@@ -17,6 +17,7 @@ setup(
     classifiers=[
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
