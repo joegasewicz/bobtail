@@ -202,6 +202,9 @@ class BobTail:
             if port is None:
                 port = 8000
         log.info(f"Starting development server on http:{host}:{port}")
-        log.info("WARNING: This is a development server. Use a server like Gunicorn for production!")
+        log.info(
+            "WARNING: This is a development server. "
+            " Use a server like Gunicorn for production!"
+        )
         with make_server(host, port, self) as server:
             server.serve_forever()

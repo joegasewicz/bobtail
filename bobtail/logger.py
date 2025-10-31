@@ -1,4 +1,4 @@
 import logging
 
-logging.basicConfig(level=logging.DEBUG)  # TODO options
-log = logging.getLogger("bobtail")  # TODO __name__
+logging.basicConfig(level=logging.DEBUG)
+log = logging.getLogger("bobtail")
