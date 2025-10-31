@@ -14,7 +14,6 @@ Read the [docs](https://bobtail.readthedocs.io/en/latest/)
 ## Install
 ```
 pipenv install bobtail
-pipenv install gunicorn
 ```
 
 ### Getting Started
@@ -31,13 +30,13 @@ routes = [
     (Images(), "/images")
 ]
 
-app = BobTail(routes=routes)
+if __name__ == "__main__":
+    bobtail = BobTail(routes=routes)
+    bobtail.run(port=8000)
 ```
 
-### Run
-```
-pipenv run  gunicorn api:app
-```
+
+
 ### Options
 To define port, static directory, template directory etc. you can
 create a concrete version of the BaseOptions abstract class. See the [docs](https://bobtail.readthedocs.io/en/latest/options.html) for more info.
@@ -58,7 +57,7 @@ from bobtail_logger import BobtailLogger
 
 app = Bobtail(routes=routes)
 
-# Here we are using `bobtail-logger` logging middleware
+# Here we are using `bobtail-logger.py` logging middleware
 app.use(BobtailLogger())
 ```
 
@@ -313,3 +312,10 @@ class Images(AbstractRoute):
 
 ```
 
+### Run Bobtail in Production
+Install a WSGI compatible server such as [Gunicorn](https://gunicorn.org/)
+```bash
+# This is an example setup, `api` refers to file & `app` refers to a Bobtail instance.
+ pip install gunicorn
+ gunicorn api:app 
+```

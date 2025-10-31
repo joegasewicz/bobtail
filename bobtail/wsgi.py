@@ -1,4 +1,5 @@
 from typing import List, Dict
+from wsgiref.simple_server import make_server
 
 from bobtail.response import Response
 from bobtail.request import Request
@@ -10,6 +11,7 @@ from bobtail.middleware import Middleware
 from bobtail.headers import ResponseHeaders, RequestHeaders
 from bobtail.options import BaseOptions
 from bobtail.middleware import AbstractMiddleware
+from bobtail.logger import log
 
 
 class BobTail:
@@ -81,10 +83,11 @@ class BobTail:
         self.response = Response(self.options)
 
     def _set_request(self):
+        content_length = int(self.environ.get("CONTENT_LENGTH") or 0)
         self.request = Request(
             path=self.environ["PATH_INFO"],
             method=self.environ["REQUEST_METHOD"],
-            byte_data=self.environ["wsgi.input"].read(),
+            byte_data=self.environ["wsgi.input"].read(content_length),
             headers=RequestHeaders(content_type=self.environ.get("CONTENT_TYPE")),
             query_str=self.environ["QUERY_STRING"]
         )
@@ -160,7 +163,7 @@ class BobTail:
 
             app = Bobtail(routes=routes)
 
-            # Here we are using `bobtail-logger` logging middleware
+            # Here we are using `bobtail-logger.py` logging middleware
             app.use(BobtailLogger())
 
         Creating custom middleware example.
@@ -182,3 +185,23 @@ class BobTail:
         :return: None
         """
         self.middleware.add(middleware)
+
+    def run(self, host="0.0.0.0", port=None):
+        """
+        Starts a development server. For example::
+
+            from bobtail import BobTail
+
+            bobtail = Bobtail()
+
+            if __name__ == "__main__":
+                bobtail.run(port=8001)
+        """
+        if port is None:
+            port = self.options.PORT
+            if port is None:
+                port = 8000
+        log.info(f"Starting development server on http:{host}:{port}")
+        log.info("WARNING: This is a development server. Use a server like Gunicorn for production!")
+        with make_server(host, port, self) as server:
+            server.serve_forever()
