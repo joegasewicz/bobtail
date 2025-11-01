@@ -1,5 +1,6 @@
 from typing import Dict
 import json
+# pylint: disable=import-error
 from birman import Decoder
 
 from bobtail.headers import RequestHeaders

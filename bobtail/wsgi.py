@@ -201,6 +201,7 @@ class BobTail:
             port = self.options.PORT
             if port is None:
                 port = 8000
+        # pylint: disable=logging-fstring-interpolation
         log.info(f"Starting development server on http:{host}:{port}")
         log.info(
             "WARNING: This is a development server. "
