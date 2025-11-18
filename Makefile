@@ -14,3 +14,7 @@ install:
 # Tox is only for local development (we use github actions in CI)
 tox:
 	pipenv run tox
+
+release:
+	python setup.py sdist
+	twine upload dist/* --verbose

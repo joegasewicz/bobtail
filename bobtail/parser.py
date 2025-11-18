@@ -1,4 +1,4 @@
-from typing import List, Dict, Optional
+from typing import List, Dict, Optional, Union
 
 from bobtail.route import Route
 
@@ -6,12 +6,14 @@ from bobtail.route import Route
 class Parser:
     routes: List[Route]
 
+    path_list: List[List[str]] = None
+
     # the incoming request path
     path: str
 
     meta_data: Dict = None
 
-    def __init__(self, routes: List[Route], path):
+    def __init__(self, routes: List[Route], path: str):
         self.path = path
         self.routes = routes
 
@@ -27,49 +29,63 @@ class Parser:
             "split": path_segments[1:],
         }
         # Cache route path
-        for rc, route in self.routes:
+        for rc, routes in self.routes:
             route_class = rc.__class__.__name__
-            route_split = route.split("/")
+            self.meta_data["routes"][route_class] = []
+            for r in routes:
+                route_split = r.split("/")
             # match route against path
-            self.meta_data["routes"][route_class] = {
-                "route": route,
-                "split": route_split[1:],
-                "vars": None,
-            }
+                self.meta_data["routes"][route_class].append({
+                    "route": r,
+                    "split": route_split[1:],
+                    "vars": None,
+                })
 
         for k, _ in self.meta_data["routes"].items():
-            split_route_vals = self.meta_data["routes"][k]["split"]
-            split_path_vals = self.meta_data["path"]["split"]
-            # check if the incoming request path is longer than the stored route path
-            if len(split_route_vals) != len(split_path_vals):
-                # if * is in the last segment then skip and match
-                last_segment = split_route_vals[len(split_route_vals)-1]
-                if last_segment != "*":
+            no_match = False
+            for ii, route in enumerate(self.meta_data["routes"][k]):
+                if no_match:
                     continue
-            # route_segment - the assigned route handlers path
-            _route_vars = {}
-            for i, route_segment in enumerate(split_route_vals):
-                # path_segment - the incoming requests path
-                path_segment = self.meta_data["path"]["split"][i]
-                # Check if path is "/"
-                if len(route_segment) == 0 and self.path == "/":
-                    self.meta_data["matched"] = k
-                    self._set_metadata(k, path_segment, None, None)
-                    return self.meta_data["routes"][k]
-                # Test route matches path
-                if route_segment and route_segment[0] != "{" and route_segment != path_segment:
-                    if route_segment == "*":
-                        self.meta_data["matched"] = k
-                        return self.meta_data["routes"][k]
-                    # No match, break out of this route class
+                split_route_vals = route["split"]
+                split_path_vals = self.meta_data["path"]["split"]
+                # check if the incoming request path is longer than the stored route path
+                if len(split_route_vals) != len(split_path_vals):
+                    # if * is in the last segment then skip and match
+                    last_segment = split_route_vals[len(split_route_vals)-1]
+                    if last_segment != "*":
+                        continue
+                # route_segment - the assigned route handlers path
+                _route_vars = {}
+                if len(split_route_vals) != len(split_path_vals) and "*" not in split_route_vals:
+                    # If the route segments and path segments are not equal then no need to parse
                     break
-                if route_segment and route_segment[0] == "{":
-                    # If we reach this point then store the vars
-                    n, t = route_segment[1:-1].split(":")
-                    self._set_metadata(k, path_segment, t, n)
-                if (len(split_path_vals) - 1) == i:
-                    self.meta_data["matched"] = k
-                    return self.meta_data["routes"][k]
+                for i, route_segment in enumerate(split_route_vals):
+                    # path_segment - the incoming requests path
+                    if len(self.meta_data["path"]["split"]) < i+1:
+                        break
+                    path_segment = self.meta_data["path"]["split"][i]
+                    if route_segment != path_segment and "{" not in route_segment and "*" not in route_segment:
+                        no_match = True
+                        break
+                    # Check if path is "/"
+                    if len(route_segment) == 0 and self.path == "/":
+                        self.meta_data["matched"] = k
+                        self._set_metadata(k, path_segment, None, None, ii)
+                        return route
+                    # Test route matches path
+                    if route_segment and route_segment[0] != "{" and route_segment != path_segment:
+                        if route_segment == "*":
+                            self.meta_data["matched"] = k
+                            return route
+                        # No match, break out of this route class
+                        break
+                    if route_segment and route_segment[0] == "{":
+                        # If we reach this point then store the vars
+                        n, t = route_segment[1:-1].split(":")
+                        self._set_metadata(k, path_segment, t, n, ii)
+                    if (len(split_path_vals) - 1) == i:
+                        self.meta_data["matched"] = k
+                        return route
 
     def _set_metadata(
             self,
@@ -77,6 +93,7 @@ class Parser:
             path_segment: str,
             var_type: Optional[str],
             var_name: Optional[str],
+            index: int,
     ):
         """
         # Returns:
@@ -107,12 +124,12 @@ class Parser:
                     "value": path_segment,
                 }
             }
-            if self.meta_data["routes"][class_name]["vars"]:
-                _route_vars |= self.meta_data["routes"][class_name]["vars"]
-            self.meta_data["routes"][class_name]["vars"] = _route_vars
-        if "path" not in self.meta_data["routes"][class_name]:
-            self.meta_data["routes"][class_name]["path"] = self.path
-            self.meta_data["routes"][class_name]["class"] = class_name
+            if self.meta_data["routes"][class_name][index]["vars"]:
+                _route_vars |= self.meta_data["routes"][class_name][index]["vars"]
+            self.meta_data["routes"][class_name][index]["vars"] = _route_vars
+        if "path" not in self.meta_data["routes"][class_name][index]:
+            self.meta_data["routes"][class_name][index]["path"] = self.path
+            self.meta_data["routes"][class_name][index]["class"] = class_name
 
     def route(self) -> Dict:
         """

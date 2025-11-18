@@ -20,9 +20,9 @@ class TestParser:
                 pass
 
         routes1 = [
-            (Images1(), "/images/image/{id:int}"),
-            (Videos1(), "/videos/movie/{name:string}"),
-            (Files1(), "/files/new/{true:bool}"),
+            (Images1(), ["/images/image/{id:int}"]),
+            (Videos1(), ["/videos/movie/{name:string}"]),
+            (Files1(), ["/files/new/{true:bool}"]),
         ]
         path1 = "/images/image/1"
         p1 = Parser(routes1, path1)
@@ -56,9 +56,9 @@ class TestParser:
                 pass
 
         routes2 = [
-            (Images2(), "/images/image/{id:int}/pic/{file_name:str}"),
-            (Videos2(), "/videos/movie/{name:str}"),
-            (Files2(), "/files/new/{true:bool}"),
+            (Images2(), ["/images/image/{id:int}/pic/{file_name:str}"]),
+            (Videos2(), ["/videos/movie/{name:str}"]),
+            (Files2(), ["/files/new/{true:bool}"]),
         ]
         path2 = "/images/image/1/pic/sunny.png"
         p2 = Parser(routes2, path2)
@@ -97,9 +97,9 @@ class TestParser:
                 pass
 
         routes3 = [
-            (Images3(), "/images"),
-            (Home3(), "/"),
-            (Files3(), "/"),
+            (Images3(), ["/images"]),
+            (Home3(), ["/"]),
+            (Files3(), ["/"]),
         ]
         path = "/"
         p3 = Parser(routes3, path)
@@ -127,9 +127,9 @@ class TestParser:
                 pass
 
         routes2 = [
-            (Images6(), "/images/image/{id:int}/pic/{file_name:str}"),
-            (Videos6(), "/videos/movie/{name:str}"),
-            (Files6(), "/files/new/{true:bool}"),
+            (Images6(), ["/images/image/{id:int}/pic/{file_name:str}"]),
+            (Videos6(), ["/videos/movie/{name:str}"]),
+            (Files6(), ["/files/new/{true:bool}"]),
         ]
         path2 = "/images/image/1/pic/sunny.png/hello!"
         p2 = Parser(routes2, path2)
@@ -150,9 +150,9 @@ class TestParser:
                 pass
 
         routes4 = [
-            (Images4(), "/images"),
-            (Home4(), "/"),
-            (Files4(), "/"),
+            (Images4(), ["/images"]),
+            (Home4(), ["/"]),
+            (Files4(), ["/"]),
         ]
         path = "/"
         p4 = Parser(routes4, path)
@@ -168,7 +168,6 @@ class TestParser:
         m = p4.get_matched()
         assert m == "Home4"
 
-
     def test_static_route(self):
         class Images6:
             def get(self, req, res):
@@ -183,11 +182,39 @@ class TestParser:
                 pass
 
         routes2 = [
-            (Videos6(), "/videos"),
-            (Files6(), "/files/new/{true:bool}"),
-            (Images6(), "/static/*"),
+            (Videos6(), ["/videos"]),
+            (Files6(), ["/files/new/{true:bool}"]),
+            (Images6(), ["/static/*"]),
         ]
         path2 = "/static/images/sunny.png"
         p2 = Parser(routes2, path2)
         _ = p2.route()
         assert p2.meta_data["matched"] == "Images6"
+
+    @pytest.mark.parametrize(
+        "mock_path,matched", [
+            ("/products", "Product"),
+            ("/roducts", None),
+            ("/products/1", "Product"),
+            ("/roducts/1", None),
+            ("/products/1/details", "Product"),
+            ("/products/1/details/2", "Product"),
+
+        ]
+    )
+    def test_all_segments_of_a_complex_path(self, mock_path, matched):
+        class Product:
+            def get(self, req, res):
+               res.set_body({"product": "coffee"})
+
+        routes = [
+            (Product(), [
+                "/products/{product_id:int}/details",
+                "/products/{product_id:int}",
+                "/products",
+                "/products/{product_id:int}/details/{detail_is:int}",
+            ]),
+        ]
+        p = Parser(routes, mock_path)
+        _ = p.route()
+        assert p.meta_data["matched"] == matched
