@@ -5,17 +5,17 @@ name = "pypi"
 
 [packages]
 birman = "0.0.2"
+pylint = "*"
 
 [dev-packages]
 gunicorn = "*"
 sphinx = "*"
 pytest-deprecate = "*"
 tox = "*"
-pip = "*"
 sphinx-rtd-theme = "*"
-pylint = "*"
-# below pkgs are for py310 running pylint in CI
 tomli = "*"
 typing-extensions = "*"
 dill = "*"
 exceptiongroup = "*"
+twine = "*"
+pylint = "*"

@@ -165,6 +165,10 @@ class Request(ABC):
         param_dict = {}
         pl = self.query_str.split("&")
         for kv in pl:
+            if "=" not in kv:
+                continue
             k, v = kv.split("=")
+            if not k:
+                continue
             param_dict[k] = v
         return param_dict

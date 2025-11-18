@@ -22,7 +22,7 @@ class TestRequest:
             def get(self, req, res):
                 pass
 
-        routes = [(Images(), "/images/{id:int}")]
+        routes = [(Images(), ["/images/{id:int}"])]
 
         app = bobtail_app(routes=routes)
 
@@ -43,7 +43,7 @@ class TestRequest:
                 pass
 
         routes = [
-            (Images(), "/images/{id:int}/{name:str}/{is_raining:bool}")
+            (Images(), ["/images/{id:int}/{name:str}/{is_raining:bool}"])
         ]
 
         app = bobtail_app(routes=routes)
@@ -64,7 +64,7 @@ class TestRequest:
                 pass
 
         routes = [
-            (Images(), "/images/{id:int}")
+            (Images(), ["/images/{id:int}"])
         ]
 
         app = bobtail_app(routes=routes)
@@ -115,6 +115,22 @@ class TestRequest:
         )
         result = req.get_params()
         expected = {"name": "joe", "age": "48"}
+        assert result == expected
+
+    @pytest.mark.parametrize(
+        "query_str", ["0", "", "=", "!"]
+    )
+    def test_get_params_with_malformed_values(self, query_str):
+        req_headers = RequestHeaders("application/json")
+        req = Request(
+            query_str=query_str,
+            path="/images",
+            method="GET",
+            byte_data=b'test text',
+            headers=req_headers,
+        )
+        result = req.get_params()
+        expected = {}
         assert result == expected
 
     @pytest.mark.deprecated("This feature will be dropped in 0.1.0")
