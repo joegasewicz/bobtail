@@ -205,7 +205,7 @@ class TestParser:
     def test_all_segments_of_a_complex_path(self, mock_path, matched):
         class Product:
             def get(self, req, res):
-               res.set_body({"product": "coffee"})
+                res.set_body({"product": "coffee"})
 
         routes = [
             (Product(), [
@@ -217,4 +217,5 @@ class TestParser:
         ]
         p = Parser(routes, mock_path)
         _ = p.route()
+
         assert p.meta_data["matched"] == matched

@@ -117,6 +117,22 @@ class TestRequest:
         expected = {"name": "joe", "age": "48"}
         assert result == expected
 
+    @pytest.mark.parametrize(
+        "query_str", ["0", "", "=", "!"]
+    )
+    def test_get_params_with_malformed_values(self, query_str):
+        req_headers = RequestHeaders("application/json")
+        req = Request(
+            query_str=query_str,
+            path="/images",
+            method="GET",
+            byte_data=b'test text',
+            headers=req_headers,
+        )
+        result = req.get_params()
+        expected = {}
+        assert result == expected
+
     @pytest.mark.deprecated("This feature will be dropped in 0.1.0")
     def test_get_form_data(self, multipart_data):
         req_headers = RequestHeaders("application/x-www-form-urlencoded")
