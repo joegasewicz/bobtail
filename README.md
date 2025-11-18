@@ -21,13 +21,13 @@ An example of the smallest Bobtail app
 ```python
 from bobtail import BobTail, AbstractRoute, Request, Response
 
-class Images:
+class Blogs:
 
     def get(self, req, res):
         res.set_body({id: 1})
 
 routes = [
-    (Images(), "/images")
+    (Blogs(), ["/blogs", "blogs/{blog_id:int}"])
 ]
 
 if __name__ == "__main__":
@@ -35,7 +35,23 @@ if __name__ == "__main__":
     bobtail.run(port=8000)
 ```
 
+### Routes
+Declare routes with a list of tuples, where the first item uis the route handler class & second item
+is a list of paths to match against.
 
+```python
+routes = [
+    (Videos(), ["/videos"]),
+    (Files(), ["/files/new/{true:bool}"]),
+    (Product(), [
+        "/products/{product_id:int}/details",
+        "/products/{product_id:int}",
+        "/products",
+        "/products/{product_id:int}/details/{detail_is:int}",
+    ]),
+    (Images(), ["/static/*"]),
+]
+```
 
 ### Options
 To define port, static directory, template directory etc. you can
@@ -298,16 +314,16 @@ from bobtail import AbstractRoute, Request, Response
 
 
 class Images(AbstractRoute):
-    def get(self, req: Request, res: Response):
+    def get(self, req: Request, res: Response) -> None:
         pass
     
-    def post(self, req: Request, res: Response):
+    def post(self, req: Request, res: Response) -> None:
         pass
 
-    def put(self, req: Request, res: Response):
+    def put(self, req: Request, res: Response) -> None:
         pass
 
-    def delete(self, req: Request, res: Response):
+    def delete(self, req: Request, res: Response) -> None:
         pass
 
 ```

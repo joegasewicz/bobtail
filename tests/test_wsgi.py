@@ -48,7 +48,7 @@ class TestBobtail:
     def test_handlers_get(self, bobtail_app, route_class_one, environ):
 
         routes = [
-            (route_class_one, "/images")
+            (route_class_one, ["/images"])
         ]
         self.app = bobtail_app(routes=routes)
 
@@ -63,7 +63,7 @@ class TestBobtail:
 
     def test_handlers_post(self, bobtail_app, route_class_one, environ):
         routes = [
-            (route_class_one, "/images")
+            (route_class_one, ["/images"])
         ]
 
         self.app = bobtail_app(routes=routes)
@@ -81,7 +81,7 @@ class TestBobtail:
 
     def test_handlers_delete(self, bobtail_app, route_class_one, environ):
         routes = [
-            (route_class_one, "/images")
+            (route_class_one, ["/images"])
         ]
         self.app = bobtail_app(routes=routes)
 
@@ -96,7 +96,7 @@ class TestBobtail:
 
     def test_handlers_put(self, bobtail_app, route_class_one, environ):
         routes = [
-            (route_class_one, "/images")
+            (route_class_one, ["/images"])
         ]
         self.app = bobtail_app(routes=routes)
 
@@ -111,7 +111,7 @@ class TestBobtail:
 
     def test_handlers_path(self, bobtail_app, route_class_one, environ):
         routes = [
-            (route_class_one, "/images")
+            (route_class_one, ["/images"])
         ]
         self.app = bobtail_app(routes=routes)
 
@@ -129,7 +129,7 @@ class TestBobtail:
     def test_headers(self, bobtail_app, route_class_two, environ):
 
         routes = [
-            (route_class_two, "/images")
+            (route_class_two, ["/images"])
         ]
 
         self.app = bobtail_app(routes=routes)
@@ -144,7 +144,7 @@ class TestBobtail:
     def test_args_not_in_path(self, bobtail_app, route_class_two, environ):
          # Ref: https://github.com/joegasewicz/bobtail/issues/27
         routes = [
-            (route_class_two, "/images/{id:int}")
+            (route_class_two, ["/images/{id:int}"])
         ]
 
         self.app = bobtail_app(routes=routes)

@@ -207,13 +207,28 @@ class TestParser:
             def get(self, req, res):
                 res.set_body({"product": "coffee"})
 
+        class Images6:
+            def get(self, req, res):
+                pass
+
+        class Videos6:
+            def get(self, req, res):
+                pass
+
+        class Files6:
+            def get(self, req, res):
+                pass
+
         routes = [
+            (Videos6(), ["/videos"]),
+            (Files6(), ["/files/new/{true:bool}"]),
             (Product(), [
                 "/products/{product_id:int}/details",
                 "/products/{product_id:int}",
                 "/products",
                 "/products/{product_id:int}/details/{detail_is:int}",
             ]),
+            (Images6(), ["/static/*"]),
         ]
         p = Parser(routes, mock_path)
         _ = p.route()

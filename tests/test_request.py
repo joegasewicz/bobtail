@@ -22,7 +22,7 @@ class TestRequest:
             def get(self, req, res):
                 pass
 
-        routes = [(Images(), "/images/{id:int}")]
+        routes = [(Images(), ["/images/{id:int}"])]
 
         app = bobtail_app(routes=routes)
 
@@ -43,7 +43,7 @@ class TestRequest:
                 pass
 
         routes = [
-            (Images(), "/images/{id:int}/{name:str}/{is_raining:bool}")
+            (Images(), ["/images/{id:int}/{name:str}/{is_raining:bool}"])
         ]
 
         app = bobtail_app(routes=routes)
@@ -64,7 +64,7 @@ class TestRequest:
                 pass
 
         routes = [
-            (Images(), "/images/{id:int}")
+            (Images(), ["/images/{id:int}"])
         ]
 
         app = bobtail_app(routes=routes)
