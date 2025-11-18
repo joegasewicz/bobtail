@@ -17,6 +17,7 @@ class Parser:
         self.path = path
         self.routes = routes
 
+    # pylint: disable=too-many-branches
     def _match(self) -> Dict:
         """
         Remove all variable segments from both stings & match
@@ -64,7 +65,10 @@ class Parser:
                     if len(self.meta_data["path"]["split"]) < i+1:
                         break
                     path_segment = self.meta_data["path"]["split"][i]
-                    if route_segment != path_segment and "{" not in route_segment and "*" not in route_segment:
+                    if (route_segment != path_segment and
+                            "{" not in route_segment and
+                            "*" not in route_segment
+                    ):
                         no_match = True
                         break
                     # Check if path is "/"
@@ -86,7 +90,7 @@ class Parser:
                     if (len(split_path_vals) - 1) == i:
                         self.meta_data["matched"] = k
                         return route
-
+    # pylint: disable=too-many-arguments,too-many-positional-arguments
     def _set_metadata(
             self,
             class_name: str,
