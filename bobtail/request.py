@@ -52,14 +52,14 @@ class Request(ABC):
     def get_path(self) -> str:
         return self.path
 
-    def get_arg(self, name: str) -> Union[str, int, bool]:
+    def get_arg(self, name: str) -> Union[str, int, bool, None]:
         """
         :param name:
         :type name:
         :return:
         :rtype:
         """
-        if name not in self.args:
+        if not self.args or name not in self.args:
             return None
 
         arg_value = self.args[name]["value"]
