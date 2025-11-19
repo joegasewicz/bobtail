@@ -111,22 +111,22 @@ class BobTail:
         for current_route in self.routes:
             route, _ = current_route
             if route.__class__.__name__ == p.get_matched():
-                match self.request.method:
-                    case "GET":
-                        self._call_handler(route, "get")
-                        return
-                    case "POST":
-                        self._call_handler(route, "post")
-                        return
-                    case "DELETE":
-                        self._call_handler(route, "delete")
-                        return
-                    case "PUT":
-                        self._call_handler(route, "put")
-                        return
-                    case "PATCH":
-                        self._call_handler(route, "patch")
-                        return
+                method = self.request.method
+                if method == "GET":
+                    self._call_handler(route, "get")
+                    return None
+                if method == "POST":
+                    self._call_handler(route, "post")
+                    return None
+                if method == "DELETE":
+                    self._call_handler(route, "delete")
+                    return None
+                if method == "PUT":
+                    self._call_handler(route, "put")
+                    return None
+                if method == "PATCH":
+                    self._call_handler(route, "patch")
+                    return None
         self.middleware.call(self.request, self.response, self._handle_404)
 
     def __call__(self, environ, start_response):

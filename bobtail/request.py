@@ -63,13 +63,14 @@ class Request(ABC):
             return None
 
         arg_value = self.args[name]["value"]
-        match self.args[name]["type"]:
-            case "int":
-                return int(arg_value)
-            case "str":
-                return arg_value
-            case "bool":
-                return bool(arg_value == "true" or arg_value == "True")
+        arg_type = self.args[name]["type"]
+        if arg_type == "int":
+            return int(arg_value)
+        if arg_type == "str":
+            return arg_value
+        if arg_type == "bool":
+            return bool(arg_value == "true" or arg_value == "True")
+        return None
 
     def set_args(self, args):
         self.args = args
