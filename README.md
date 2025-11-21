@@ -3,7 +3,7 @@
 
 [//]: # (![PyPI - Python Version]&#40;https://img.shields.io/pypi/pyversions/bobtail&#41;)
 
-![Bobtail](docs/bobtail1.png?raw=true "Bobtail")
+![Bobtail](docs/bobtail2.png?raw=true "Bobtail")
 A little Python http framework
 
 ⚠️ *Ready to use in `v0.1.0`, production ready in `v1.0.0`*
