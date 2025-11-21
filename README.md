@@ -4,7 +4,7 @@
 [//]: # (![PyPI - Python Version]&#40;https://img.shields.io/pypi/pyversions/bobtail&#41;)
 
 ![Bobtail](docs/bobtail2.png?raw=true "Bobtail")
-A little Python http framework
+A Python WSGI application framework inspired by Spring Boot.
 
 ⚠️ *Ready to use in `v0.1.0`, production ready in `v1.0.0`*
 
@@ -35,7 +35,7 @@ if __name__ == "__main__":
 ```
 
 ### Routes
-Declare routes with a list of tuples, where the first item uis the route handler class & second item
+Declare routes with a list of tuples, where the first item is the route handler class & second item
 is a list of paths to match against.
 
 ```python
