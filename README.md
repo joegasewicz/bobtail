@@ -9,7 +9,8 @@ A Python WSGI application framework inspired by Spring Boot.
 ⚠️ *Ready to use in `v0.1.0`, production ready in `v1.0.0`*
 
 Read the [docs](https://bobtail.readthedocs.io/en/latest/)
-Support for Python `3.9` to `3.14`
+ 
+Support for Python `3.9` to `3.14`.
 
 ## Install
 ```
