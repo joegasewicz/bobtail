@@ -20,7 +20,7 @@ class Request(ABC):
 
     headers: RequestHeaders
 
-    byte_data: input
+    byte_data: bytes
 
     wsgi_input: WSGIInput
 
@@ -30,13 +30,24 @@ class Request(ABC):
 
     multipart: MultipartForm
 
-    def __init__(self, *,  # pylint: disable=too-many-arguments
-                 path: str,
-                 method: str,
-                 byte_data: bytes,
-                 headers: RequestHeaders,
-                 query_str: str,
-                 ):
+    scheme: str
+
+    domain: str
+
+    _port: str
+
+    def __init__(
+        self,  # pylint: disable=too-many-arguments
+        *,
+        path: str,
+        method: str,
+        byte_data: bytes,
+        headers: RequestHeaders,
+        query_str: str,
+        scheme: str,
+        domain: str,
+        port: str,
+    ):
         self.path = path
         self.method = method
         self.headers = headers
@@ -48,6 +59,17 @@ class Request(ABC):
         )
         self.form = Form(self.wsgi_input)
         self.multipart = MultipartForm(self.wsgi_input)
+        self.scheme = scheme
+        self.domain = domain
+        self._port = port
+
+    @property
+    def port(self) -> int:
+        return int(self._port)
+
+    @port.setter
+    def port(self, value: str):
+        self._port = value
 
     def get_path(self) -> str:
         return self.path

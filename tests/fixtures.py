@@ -4,6 +4,7 @@ import io
 
 from bobtail.wsgi import BobTail
 from bobtail.options import BaseOptions
+from tests.mock_environ import mock_environ
 
 
 @pytest.fixture(scope="function")
@@ -88,9 +89,17 @@ def environ():
             "wsgi.input": io.BytesIO(data),
             "CONTENT_TYPE": content,
             "QUERY_STRING": query_str,
+            'SERVER_NAME': '127.0.0.1',
+            'SERVER_PORT': '8000',
+            'wsgi.url_scheme': 'http',
         }
 
     return inner
+
+
+@pytest.fixture(scope="function")
+def wsgi_environ() -> dict:
+    return mock_environ
 
 
 @pytest.fixture(scope="function")
