@@ -5,11 +5,9 @@ name = "pypi"
 
 [packages]
 birman = "0.0.2"
-pylint = "*"
 
 [dev-packages]
 gunicorn = "*"
-sphinx = "*"
 pytest-deprecate = "*"
 tox = "*"
 sphinx-rtd-theme = "*"
@@ -19,3 +17,5 @@ dill = "*"
 exceptiongroup = "*"
 twine = "*"
 pylint = "*"
+furo = "*"
+sphinx = "*"

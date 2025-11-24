@@ -5,7 +5,7 @@
 
 Welcome to Bobtail
 ==================
-.. image:: _static/bobtail.png
+.. image:: bobtail2.png
    :align: center
    :target: https://github.com/joegasewicz/bobtail
 
