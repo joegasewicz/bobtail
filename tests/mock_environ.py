@@ -1,4 +1,6 @@
 #'QUERY_STRING': 'name=joe&age=48', 'RAW_URI': '/posts?name=joe&age=48'
+import io
+
 
 mock_environ = {
     'wsgi.errors': '<gunicorn.http.wsgi.WSGIErrorsWrapper object at 0x102260d30>',
@@ -9,7 +11,7 @@ mock_environ = {
     'wsgi.file_wrapper': "<class 'gunicorn.http.wsgi.FileWrapper'>",
     'wsgi.input_terminated': True,
     'SERVER_SOFTWARE': 'gunicorn/20.1.0',
-    'wsgi.input': "<gunicorn.http.body.Body object at 0x102274490>",
+    'wsgi.input': io.BytesIO(b""),
     'gunicorn.socket': "<socket.socket fd=9, family=2, type=1, proto=0, laddr=('127.0.0.1', 8000), raddr=('127.0.0.1', 56963)>",
     'REQUEST_METHOD': 'GET',
     'QUERY_STRING': '',
@@ -36,4 +38,5 @@ mock_environ = {
     'SERVER_PORT': '8000',
     'PATH_INFO': '/',
     'SCRIPT_NAME': '',
+    'CONTENT_TYPE': '',
 }

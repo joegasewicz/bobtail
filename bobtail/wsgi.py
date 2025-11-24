@@ -89,7 +89,10 @@ class BobTail:
             method=self.environ["REQUEST_METHOD"],
             byte_data=self.environ["wsgi.input"].read(content_length),
             headers=RequestHeaders(content_type=self.environ.get("CONTENT_TYPE")),
-            query_str=self.environ["QUERY_STRING"]
+            query_str=self.environ["QUERY_STRING"],
+            scheme=self.environ["wsgi.url_scheme"],
+            domain=self.environ["SERVER_NAME"],
+            port=self.environ["SERVER_PORT"],
         )
 
     def _call_handler(self, route: callable, method: str):

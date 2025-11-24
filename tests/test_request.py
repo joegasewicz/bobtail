@@ -8,6 +8,7 @@ from tests.fixtures import (
     multipart_data,
     form_data,
     multipart_data_with_file,
+    wsgi_environ,
 )
 
 from bobtail.request import Request
@@ -78,7 +79,7 @@ class TestRequest:
         data = app(env, lambda s, r: None)
         assert app.request.get_arg("id") == None
 
-    def test_get_json(self):
+    def test_get_json(self, wsgi_environ):
         req_headers = RequestHeaders("application/json")
         req = Request(
             query_str="",
@@ -86,12 +87,15 @@ class TestRequest:
             method="POST",
             byte_data=b'{\n    "name": "joe"\n, "email": "joe@email.com"\n}',
             headers=req_headers,
+            scheme=wsgi_environ["wsgi.url_scheme"],
+            domain=wsgi_environ["SERVER_NAME"],
+            port=wsgi_environ["SERVER_PORT"],
         )
         result = req.get_json()
         expected = {"email": "joe@email.com", "name": "joe"}
         assert result == expected
 
-    def test_get_body(self):
+    def test_get_body(self, wsgi_environ):
         req_headers = RequestHeaders("application/json")
         req = Request(
             query_str="",
@@ -99,12 +103,15 @@ class TestRequest:
             method="POST",
             byte_data=b'test text',
             headers=req_headers,
+            scheme=wsgi_environ["wsgi.url_scheme"],
+            domain=wsgi_environ["SERVER_NAME"],
+            port=wsgi_environ["SERVER_PORT"],
         )
         result = req.get_body()
         expected = 'test text'
         assert result == expected
 
-    def test_get_params(self):
+    def test_get_params(self, wsgi_environ):
         req_headers = RequestHeaders("application/json")
         req = Request(
             query_str="name=joe&age=48",
@@ -112,6 +119,9 @@ class TestRequest:
             method="GET",
             byte_data=b'test text',
             headers=req_headers,
+            scheme=wsgi_environ["wsgi.url_scheme"],
+            domain=wsgi_environ["SERVER_NAME"],
+            port=wsgi_environ["SERVER_PORT"],
         )
         result = req.get_params()
         expected = {"name": "joe", "age": "48"}
@@ -120,7 +130,7 @@ class TestRequest:
     @pytest.mark.parametrize(
         "query_str", ["0", "", "=", "!"]
     )
-    def test_get_params_with_malformed_values(self, query_str):
+    def test_get_params_with_malformed_values(self, query_str, wsgi_environ):
         req_headers = RequestHeaders("application/json")
         req = Request(
             query_str=query_str,
@@ -128,13 +138,16 @@ class TestRequest:
             method="GET",
             byte_data=b'test text',
             headers=req_headers,
+            scheme=wsgi_environ["wsgi.url_scheme"],
+            domain=wsgi_environ["SERVER_NAME"],
+            port=wsgi_environ["SERVER_PORT"],
         )
         result = req.get_params()
         expected = {}
         assert result == expected
 
     @pytest.mark.deprecated("This feature will be dropped in 0.1.0")
-    def test_get_form_data(self, multipart_data):
+    def test_get_form_data(self, multipart_data, wsgi_environ):
         req_headers = RequestHeaders("application/x-www-form-urlencoded")
         req = Request(
             query_str="",
@@ -142,6 +155,9 @@ class TestRequest:
             method="POST",
             byte_data=multipart_data,
             headers=req_headers,
+            scheme=wsgi_environ["wsgi.url_scheme"],
+            domain=wsgi_environ["SERVER_NAME"],
+            port=wsgi_environ["SERVER_PORT"],
         )
         result = req.get_form_data()
         expected = {
@@ -159,7 +175,7 @@ class TestRequest:
         assert result == expected
 
     @pytest.mark.deprecated("This feature will be dropped in 0.1.0")
-    def test_get_multipart_data(self, multipart_data):
+    def test_get_multipart_data(self, multipart_data, wsgi_environ):
         req_headers = RequestHeaders("multipart/form-data")
         req = Request(
             query_str="",
@@ -167,6 +183,9 @@ class TestRequest:
             method="POST",
             byte_data=multipart_data,
             headers=req_headers,
+            scheme=wsgi_environ["wsgi.url_scheme"],
+            domain=wsgi_environ["SERVER_NAME"],
+            port=wsgi_environ["SERVER_PORT"],
         )
         result = req.get_multipart_data()
         expected = {
@@ -184,7 +203,7 @@ class TestRequest:
         assert result == expected
 
     @pytest.mark.deprecated("This feature will be dropped in 0.1.0")
-    def test_get_form_value(self, form_data):
+    def test_get_form_value(self, form_data, wsgi_environ):
         req_headers = RequestHeaders("application/x-www-form-urlencoded")
         req = Request(
             query_str="",
@@ -192,6 +211,9 @@ class TestRequest:
             method="POST",
             byte_data=form_data,
             headers=req_headers,
+            scheme=wsgi_environ["wsgi.url_scheme"],
+            domain=wsgi_environ["SERVER_NAME"],
+            port=wsgi_environ["SERVER_PORT"],
         )
         assert req.get_form_value("password") == "wizard"
 
@@ -199,7 +221,7 @@ class TestRequest:
             req.get_form_value("bananas")
 
     @pytest.mark.deprecated("This feature will be dropped in 0.1.0")
-    def test_get_multipart_value(self, multipart_data):
+    def test_get_multipart_value(self, multipart_data, wsgi_environ):
         req_headers = RequestHeaders("multipart/form-data")
         req = Request(
             query_str="",
@@ -207,6 +229,9 @@ class TestRequest:
             method="POST",
             byte_data=multipart_data,
             headers=req_headers,
+            scheme=wsgi_environ["wsgi.url_scheme"],
+            domain=wsgi_environ["SERVER_NAME"],
+            port=wsgi_environ["SERVER_PORT"],
         )
         assert req.get_multipart_value("email") == "test@test.com"
 
@@ -214,7 +239,7 @@ class TestRequest:
             req.get_multipart_value("bananas")
 
     @pytest.mark.deprecated("This feature will be dropped in 0.1.0")
-    def test_get_filename_value(self, multipart_data_with_file):
+    def test_get_filename_value(self, multipart_data_with_file, wsgi_environ):
         req_headers = RequestHeaders("multipart/form-data")
         req = Request(
             query_str="",
@@ -222,8 +247,25 @@ class TestRequest:
             method="POST",
             byte_data=multipart_data_with_file,
             headers=req_headers,
+            scheme=wsgi_environ["wsgi.url_scheme"],
+            domain=wsgi_environ["SERVER_NAME"],
+            port=wsgi_environ["SERVER_PORT"],
         )
         assert req.get_filename_value("logo") == "bobtail.png"
 
         with pytest.raises(MultipartFormDataError):
             req.get_filename_value("bananas")
+
+
+    def test_request_attributes(self, bobtail_app, wsgi_environ):
+        request = Request(
+            path=wsgi_environ["PATH_INFO"],
+            method=wsgi_environ["REQUEST_METHOD"],
+            byte_data=wsgi_environ["wsgi.input"].read(1000),
+            headers=RequestHeaders(content_type=wsgi_environ["CONTENT_TYPE"]),
+            query_str=wsgi_environ["QUERY_STRING"],
+            scheme=wsgi_environ["wsgi.url_scheme"],
+            domain=wsgi_environ["SERVER_NAME"],
+            port=wsgi_environ["SERVER_PORT"],
+        )
+        assert request.port == 8000
