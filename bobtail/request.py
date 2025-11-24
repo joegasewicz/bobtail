@@ -36,8 +36,9 @@ class Request(ABC):
 
     _port: str
 
+    # pylint: disable=too-many-arguments
     def __init__(
-        self,  # pylint: disable=too-many-arguments
+        self,
         *,
         path: str,
         method: str,
