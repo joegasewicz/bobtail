@@ -254,7 +254,6 @@ routes = [
 
 class Options(BaseOptions):
     STATIC_DIR = "app/static"
-    TEMPLATE_DIR = "app/templates"
 
 blog = BobTail(routes=routes, options=Options())
 blog.use(BobtailJinja2(template_dir="app/templates"))
