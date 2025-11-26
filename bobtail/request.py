@@ -120,8 +120,13 @@ class Request(ABC):
 
     def get_json(self) -> Dict:
         """
-        Get the
-        :return:
+        Gets the incoming request's JSON body & parses it as a Python dictionary.
+        For example::
+
+            def get(self, req, res):
+                data = req.get_json()  # e.g. {"name": "sumi"}
+
+        :return: The parsed request JSON body as a dict.
         :rtype:
         """
         return self.wsgi_input.get_json()
