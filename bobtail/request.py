@@ -73,14 +73,34 @@ class Request(ABC):
         self._port = value
 
     def get_path(self) -> str:
+        """
+        Get the full path from the incoming request. For example::
+
+            def get(self, req, res):
+                req_path = req.get_path()  # e.g. /articles/1
+
+        :return: The full path represented as a string.
+        """
         return self.path
 
     def get_arg(self, name: str) -> Union[str, int, bool, None]:
         """
-        :param name:
-        :type name:
-        :return:
-        :rtype:
+        Get path argument values from incoming request.
+        You can specify the type of Request arguments using curly braces & within the
+        name & type seperated by a colon. For examples::
+
+            /images/{id:int}/{name:str}/{is_raining:bool}
+
+        To access request arguments inside a route handler, use the Request object's
+        get_arg method, ror example::
+
+            def get(self, req, res):
+                id = req.get_args("id") # int
+                name = req.get_args("name") # str
+                is_raining = req.get_args("is_raining") # bool
+
+        :param name: The name of the path variable.
+        :return: The mapped path argument of the declared type.
         """
         if not self.args or name not in self.args:
             return None
@@ -100,6 +120,7 @@ class Request(ABC):
 
     def get_json(self) -> Dict:
         """
+        Get the
         :return:
         :rtype:
         """
@@ -107,8 +128,12 @@ class Request(ABC):
 
     def get_body(self) -> str:
         """
-        Handles text/plain
-        :return:
+        Gets the request body as a string. For example::
+
+           def get(self, req, res):
+                req_body = req.get_body()
+
+        :return: Request body as a string.
         :rtype:
         """
         return self.wsgi_input.get_body()
@@ -175,16 +200,16 @@ class Request(ABC):
 
     def get_params(self) -> Dict:
         """
-        This method returns a dict og query params where the key
-        is on the left side of the `=` sign & the value is pn the right.
-        For example:
+        This method returns a dict of query params where the key
+        is on the left side of the `=` sign & the value is 0n the right.
+        For example::
 
             # for route "/images?name=joe&age=48"
 
             def get(self, req: Request, res: Response):
                 result = req.get_params() # {"name": "joe", "age": "48"}
 
-        :return: Dict
+        :return: A dict that represents each set of query param.
         """
         param_dict = {}
         pl = self.query_str.split("&")
