@@ -6,7 +6,7 @@
 ![Bobtail](docs/bobtail2.png?raw=true "Bobtail")
 A Python WSGI application framework inspired by Spring Boot.
 
-⚠️ *Moved to 👉 [https://codeberg.org/joegasewicz/bobtail](https://codeberg.org/joegasewicz/bobtail) *
+⚠️ **Moved to 👉 [https://codeberg.org/joegasewicz/bobtail](https://codeberg.org/joegasewicz/bobtail)**
 
 Read the [docs](https://bobtail.readthedocs.io/en/latest/)
  
