@@ -5,7 +5,7 @@ To declare a static route postfix a `*` to the route's path
 
 .. code-block:: python
 
-    from bobtail import BobTail AbstractRoute, BaseOptions
+    from bobtail import Bobtail AbstractRoute, BaseOptions
     from bobtail_jinja2 import BobtailJinja2
 
 
@@ -18,7 +18,7 @@ To declare a static route postfix a `*` to the route's path
         STATIC_DIR = "app/static"
         TEMPLATE_DIR = "app/templates"
 
-    blog = BobTail(routes=routes, options=Options())
+    blog = Bobtail(routes=routes, options=Options())
     blog.use(BobtailJinja2(template_dir="app/templates"))
 
 

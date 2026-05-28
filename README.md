@@ -18,7 +18,7 @@ pipenv install bobtail
 ### Getting Started
 An example of the smallest Bobtail app
 ```python
-from bobtail import BobTail, AbstractRoute, Request, Response
+from bobtail import Bobtail, AbstractRoute, Request, Response
 
 class Blogs:
 
@@ -30,7 +30,7 @@ routes = [
 ]
 
 if __name__ == "__main__":
-    bobtail = BobTail(routes=routes)
+    bobtail = Bobtail(routes=routes)
     bobtail.run(port=8000)
 ```
 
@@ -106,7 +106,7 @@ Currently, there is middleware support for Jinja2, for example
 ```python
 from bobtail_jinja2 import BobtailJinja2
 
-blog = BobTail(routes=routes)
+blog = Bobtail(routes=routes)
 blog.use(BobtailJinja2(template_dir="templates"))
 ```
 Then to use in a request handler
@@ -243,7 +243,7 @@ def get(self, req: Request, res: Response):
 ### Static Files
 To declare a static route postfix a `*` to the route's path::
 ```python
-from bobtail import BobTail AbstractRoute, BaseOptions
+from bobtail import Bobtail AbstractRoute, BaseOptions
 from bobtail_jinja2 import BobtailJinja2
 
 routes = [
@@ -253,7 +253,7 @@ routes = [
 class Options(BaseOptions):
     STATIC_DIR = "app/static"
 
-blog = BobTail(routes=routes, options=Options())
+blog = Bobtail(routes=routes, options=Options())
 blog.use(BobtailJinja2(template_dir="app/templates"))
 ```
 Calling `set_static` from within a route method will render a static
