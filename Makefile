@@ -16,5 +16,5 @@ tox:
 	pipenv run tox
 
 release:
-	python setup.py sdist
+	pipenv run python setup.py sdist
 	twine upload dist/* --verbose
