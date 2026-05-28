@@ -1,6 +1,6 @@
 import pytest
 
-from bobtail.wsgi import BobTail
+from bobtail.wsgi import Bobtail
 from tests.fixtures import (
     bobtail_app,
     environ,

@@ -14,7 +14,7 @@ from bobtail.middleware import AbstractMiddleware
 from bobtail.logger import log
 
 
-class BobTail:
+class Bobtail:
     """
     :kwargs:
     :key routes: A tuple list of :class:`~AbstractRoute` & request path
@@ -193,7 +193,7 @@ class BobTail:
         """
         Starts a development server. For example::
 
-            from bobtail import BobTail
+            from bobtail import Bobtail
 
             bobtail = Bobtail()
 

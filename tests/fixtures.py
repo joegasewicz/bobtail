@@ -2,7 +2,7 @@ import pytest
 import io
 
 
-from bobtail.wsgi import BobTail
+from bobtail.wsgi import Bobtail
 from bobtail.options import BaseOptions
 from tests.mock_environ import mock_environ
 
@@ -12,7 +12,7 @@ def bobtail_app():
     class _Options(BaseOptions):
         pass
     def inner(*, routes):
-        return BobTail(routes=routes, options=_Options)
+        return Bobtail(routes=routes, options=_Options)
     return inner
 
 

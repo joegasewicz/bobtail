@@ -7,7 +7,7 @@ A Minimal Bobtail app
 .. code-block:: python
 
     from typing import Tuple, Optional, Dict
-    from bobtail import BobTail, AbstractRoute, Request, Response
+    from bobtail import Bobtail, AbstractRoute, Request, Response
 
     class Images:
 
@@ -18,7 +18,7 @@ A Minimal Bobtail app
         (Images(), "/images")
     ]
 
-    app = BobTail(routes=routes)
+    app = Bobtail(routes=routes)
 
 Running Bobtail with Gunicorn
 -----------------------------

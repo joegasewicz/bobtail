@@ -1,4 +1,4 @@
-from .wsgi import BobTail
+from .wsgi import Bobtail
 from .options import BaseOptions
 from .route import AbstractRoute, Handler, Route
 from .request import Request

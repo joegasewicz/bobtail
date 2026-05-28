@@ -9,12 +9,12 @@ from tests.fixtures import (
     environ,
 )
 
-from bobtail.wsgi import BobTail
+from bobtail.wsgi import Bobtail
 
 
 class TestBobtail:
 
-    app: BobTail = None
+    app: Bobtail = None
 
     def teardown_method(self):
         self.app = None
@@ -157,7 +157,7 @@ class TestBobtail:
         assert data is not None
 
     def test_no_options(self, environ):
-        self.app = BobTail(routes=[])
+        self.app = Bobtail(routes=[])
         env = environ()
         try:
             _ = self.app(env, lambda s, r: None)
